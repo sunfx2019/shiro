@@ -17,8 +17,10 @@
 						http://www.springframework.org/schema/task  
 						http://www.springframework.org/schema/task/spring-task-4.0.xsd
 						">
+	
+	<aop:config proxy-target-class="true"></aop:config> 
 
-	<!-- Shiro 的Web过滤器 -->
+	<!-- Shiro的Web过滤器 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login.shtml" />
@@ -34,9 +36,8 @@
 			<value>
 				<!-- anon表示此地址不需要任何权限即可访问 --> 
 				/error/** anon
-				/images/** anon
-				/script/** anon
-				/styles/** anon
+				/common/** anon
+				/resources/** anon
 				/index.html = anon
 				/login.shtml = anon
 				/loginCheck.shtml = anon
@@ -49,33 +50,40 @@
 		</property>
 	</bean>
 
+	<!-- 缓存管理 -->  
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
+
 	<!-- 安全管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="sampleRealm" />
+		<property name="realm" ref="myRealm" />
+		<property name="cacheManager" ref="cacheManager" />
 	</bean>
 
-	<!-- 自定义 realm -->
-	<!-- <bean id="userRealm" class="cn.itcast.ssm.realm.CustomRealm1"></bean> -->
+	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
+		<property name="userService" ref="iUserServiceImpl"/>
+	</bean>
 
-	<bean id="sampleRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+	<!--  
+	<bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
 		<property name="dataSource" ref="dataSource" />
 		<property name="authenticationQuery" value=" select t.pswd from t_user t where t.nickname = ? " />
-		<property name="userRolesQuery" value=" select r.* from t_role r, t_user_role ur where ur.rid = r.id and ur.uid = (select id from t_user u where u.nickname = ?) " />
+		<property name="userRolesQuery" value=" select r.name from t_role r, t_user_role ur where ur.rid = r.id and ur.uid = (select id from t_user u where u.nickname = ?) " />
 		<property name="permissionsQuery" value=" select b.url from t_role t left join t_role_permission a on t.id = a.rid left join t_permission b on a.pid = b.id where t.name = ? " />
 		<property name="permissionsLookupEnabled" value="true" />
 		<property name="saltStyle" value="NO_SALT" />
 		<property name="credentialsMatcher" ref="hashedCredentialsMatcher" />
 	</bean>
+	-->
 
+	<!-- 加密 -->
 	<bean id="hashedCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
 		<property name="hashAlgorithmName" value="MD5" />
 		<property name="storedCredentialsHexEncoded" value="true" />
 		<property name="hashIterations" value="1" />
 	</bean>
-
+	
 	<!-- 基于Form表单的身份验证过滤器，不配置将也会注册此过虑器，表单中的用户账号、密码及loginurl将采用默认值，建议配置 -->
-	<bean id="formAuthenticationFilter"
-		class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+	<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
 		<!-- 表单中账号的input名称 -->
 		<property name="usernameParam" value="username" />
 		<!-- 表单中密码的input名称 -->

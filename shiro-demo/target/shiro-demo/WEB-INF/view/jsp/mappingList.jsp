@@ -1,24 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ include file="/WEB-INF/view/jsp/taglib.jsp"%>
+<%@ include file="/WEB-INF/view/jsp/common/taglib.jsp"%>
 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>请求方法列表</title>
+	<jsp:include page="/WEB-INF/view/jsp/common/bootstrap.jsp"/>
 	<style type="text/css">
-		body{ margin: 20px; }
-		td, th { padding: 5px; font-size: 12px; }
-		td{ word-break:break-all;  word-wrap:break-word; }
+		.listTable{ font-size: 12px; }
+		table th{ padding: 5px; }
+		table td{ padding: 5px; }
 	</style>
 </head>
 <body>
 
-	${requestToMethodItemList}
-	
-	<c:out value="${requestToMethodItemList}"></c:out>
-	
-	<table border="1" width="">
+	<table id="listTable" border="1" width="" cellpadding="0" cellspacing="0">
 		<caption><h1>请求方法列表</h1></caption>
 		<tr height="50">
 			<th>请求URL</th>

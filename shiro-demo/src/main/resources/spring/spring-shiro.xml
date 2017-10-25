@@ -17,8 +17,10 @@
 						http://www.springframework.org/schema/task  
 						http://www.springframework.org/schema/task/spring-task-4.0.xsd
 						">
+	
+	<aop:config proxy-target-class="true"></aop:config> 
 
-	<!-- Shiro 的Web过滤器 -->
+	<!-- Shiro的Web过滤器 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login.shtml" />
@@ -34,9 +36,8 @@
 			<value>
 				<!-- anon表示此地址不需要任何权限即可访问 --> 
 				/error/** anon
-				/images/** anon
-				/script/** anon
-				/styles/** anon
+				/common/** anon
+				/resources/** anon
 				/index.html = anon
 				/login.shtml = anon
 				/loginCheck.shtml = anon
@@ -49,11 +50,20 @@
 		</property>
 	</bean>
 
+	<!-- 缓存管理 -->  
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
+
 	<!-- 安全管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="jdbcRealm" />
+		<property name="realm" ref="myRealm" />
+		<property name="cacheManager" ref="cacheManager" />
 	</bean>
 
+	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
+		<property name="userService" ref="iUserServiceImpl"/>
+	</bean>
+
+	<!--  
 	<bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
 		<property name="dataSource" ref="dataSource" />
 		<property name="authenticationQuery" value=" select t.pswd from t_user t where t.nickname = ? " />
@@ -63,6 +73,7 @@
 		<property name="saltStyle" value="NO_SALT" />
 		<property name="credentialsMatcher" ref="hashedCredentialsMatcher" />
 	</bean>
+	-->
 
 	<!-- 加密 -->
 	<bean id="hashedCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">

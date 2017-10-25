@@ -17,7 +17,7 @@ public class RandomUUID {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(UUID.randomUUID().toString());
+		System.out.println(UUID.randomUUID().toString().toUpperCase());
 		System.out.println(UUID.randomUUID().toString().length());
 		System.out.println(randomUUID().length());
 		System.out.println(randomUUID());

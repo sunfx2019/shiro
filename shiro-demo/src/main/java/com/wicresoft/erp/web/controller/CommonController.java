@@ -28,6 +28,7 @@ import com.wicresoft.erp.web.controller.AbctractBaseController;
  *
  */
 @Controller
+@RequestMapping("/common")
 public class CommonController extends AbctractBaseController {
 
 	private static final String mappings_jsp = "mappingList";
