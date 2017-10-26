@@ -20,7 +20,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 
 import com.alibaba.fastjson.JSONArray;
-import com.wicresoft.erp.entity.TPermission;
 import com.wicresoft.erp.entity.TRole;
 import com.wicresoft.erp.entity.TUser;
 import com.wicresoft.erp.service.IUserService;
@@ -59,7 +58,7 @@ public class MyRealm extends AuthorizingRealm {
 		log4j.info("----------40 doGetAuthorizationInfo方法被调用----------");
 		String userName = (String) getAvailablePrincipal(principals);
 		List<TRole> rolsList = userService.findUserRoles(userName);
-		List<TPermission> permissionList = userService.findUserPermissions(userName);
+		List<String> permissionList = userService.findUserPermissions(userName);
 		//权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		// 角色集合
@@ -69,8 +68,8 @@ public class MyRealm extends AuthorizingRealm {
 		for (TRole role : rolsList) {
 			r.add(role.getName());
 		}
-		for (TPermission permission : permissionList) {
-			p.add(permission.getUrl());
+		for (String url : permissionList) {
+			p.add(url);
 		}
 		info.setRoles(r);
 		info.setStringPermissions(p);

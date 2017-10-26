@@ -1,4 +1,4 @@
-package com.wicresoft.erp.web.controller;
+package com.wicresoft.erp.web.controller.base;
 
 import java.io.File;
 import java.util.HashMap;

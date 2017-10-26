@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.alibaba.fastjson.JSONArray;
 
 /**
  * 请求相关处理
@@ -21,10 +25,6 @@ import org.apache.commons.logging.LogFactory;
  */
 
 public class HttpRequestUtil {
-
-	public static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
-
-	public static final String AJAX_SOURCE_PARAM = "ajaxSource";
 
 	private static final String STOWED_REQUEST_ATTRIBS = "ssl.redirect.attrib.stowed";
 
@@ -358,20 +358,66 @@ public class HttpRequestUtil {
 	}
 	
 	/**
-	 * 判断是否是 Ajax 请求
-	 * 
+	 *  判断是否是 Ajax 请求
 	 * @param request
-	 * @param response
 	 * @return
 	 */
-	public static boolean isAjaxRequestInternal(HttpServletRequest request) {
-		String acceptHeader = request.getHeader("Accept");
-		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
-		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || org.springframework.util.StringUtils.hasText(ajaxParam)) {
-			return true;
-		} else {
-			return false;
+	public static boolean isAjax(ServletRequest request){
+		HttpServletRequest req = (HttpServletRequest)request;
+		return  (req.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(req.getHeader("X-Requested-With").toString())) ;
+	}
+	
+	/**
+	 * 直接输出。
+	 * 
+	 * @param contentType
+	 *            内容的类型.html,text,xml的值见后，json为"text/x-json;charset=UTF-8"
+	 */
+	public static void render(HttpServletResponse response, String text, String contentType) {
+		try {
+			response.setContentType(contentType);
+			response.getWriter().write(text);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * 直接输 Object json对象.
+	 */
+	public static void renderJson(HttpServletResponse response, Object obj) {
+		if (obj == null)
+			render(response, "", "application/json;charset=UTF-8");
+		else
+			render(response, JSONArray.toJSONString(obj), "application/json;charset=UTF-8");
+	}
+
+	/**
+	 * 直接输json对象.
+	 */
+	public static void renderJson(HttpServletResponse response, String text) {
+		render(response, text, "application/json;charset=UTF-8");
+	}
+	
+	/**
+	 * 直接输出纯字符串.
+	 */
+	public static void renderText(HttpServletResponse response, String text) {
+		render(response, text, "text/plain;charset=UTF-8");
+	}
+
+	/**
+	 * 直接输出纯HTML.
+	 */
+	public static void renderHtml(HttpServletResponse response, String html) {
+		render(response, html, "text/html;charset=UTF-8");
+	}
+
+	/**
+	 * 直接输出纯XML.
+	 */
+	public static void renderXML(HttpServletResponse response, String xml) {
+		render(response, xml, "text/xml;charset=UTF-8");
+	}
+	
 }

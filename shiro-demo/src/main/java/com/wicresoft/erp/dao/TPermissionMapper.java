@@ -1,6 +1,7 @@
 package com.wicresoft.erp.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wicresoft.erp.entity.TPermission;
 
@@ -29,9 +30,11 @@ public interface TPermissionMapper {
 	 */
 	TPermission selectByPrimaryKey(Long id);
 
-	List<TPermission> findUserPermissions(String userName);
+	List<String> findUserPermissions(String userName);
 	
 	List<TPermission> getAll();
+	
+	public List<Map<Object, Object>> findPermissionRole();
 
 	/**
 	 *

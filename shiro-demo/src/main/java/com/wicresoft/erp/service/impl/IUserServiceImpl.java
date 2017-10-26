@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.wicresoft.erp.dao.TPermissionMapper;
 import com.wicresoft.erp.dao.TRoleMapper;
 import com.wicresoft.erp.dao.TUserMapper;
-import com.wicresoft.erp.entity.TPermission;
 import com.wicresoft.erp.entity.TRole;
 import com.wicresoft.erp.entity.TUser;
 import com.wicresoft.erp.service.IUserService;
@@ -37,7 +36,7 @@ public class IUserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public List<TPermission> findUserPermissions(String userName) {
+	public List<String> findUserPermissions(String userName) {
 		return tPermissionMapper.findUserPermissions(userName);
 	}
 

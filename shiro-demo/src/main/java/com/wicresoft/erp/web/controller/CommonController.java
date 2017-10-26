@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.wicresoft.erp.bean.RequestToMethodItem;
-import com.wicresoft.erp.web.controller.AbctractBaseController;
+import com.wicresoft.erp.web.controller.base.AbctractBaseController;
 
 /**
  * 公共Controller

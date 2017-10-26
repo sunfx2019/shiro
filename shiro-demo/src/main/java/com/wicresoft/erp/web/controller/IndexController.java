@@ -3,7 +3,7 @@ package com.wicresoft.erp.web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.wicresoft.erp.web.controller.AbctractBaseController;
+import com.wicresoft.erp.web.controller.base.AbctractBaseController;
 
 /**
  * 首页 Controller

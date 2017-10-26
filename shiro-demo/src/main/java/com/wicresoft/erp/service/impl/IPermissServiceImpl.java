@@ -1,6 +1,7 @@
 package com.wicresoft.erp.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ public class IPermissServiceImpl implements IPermissService {
 	@Override
 	public List<TPermission> findAll() {
 		return tPermissionMapper.getAll();
+	}
+
+	@Override
+	public List<Map<Object, Object>> findPermissionRole() {
+		return tPermissionMapper.findPermissionRole();
 	}
 
 }

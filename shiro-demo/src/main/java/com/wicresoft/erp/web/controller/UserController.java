@@ -3,7 +3,7 @@ package com.wicresoft.erp.web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.wicresoft.erp.web.controller.AbctractBaseController;
+import com.wicresoft.erp.web.controller.base.AbctractBaseController;
 
 /**
  * 用户 Controller
@@ -14,7 +14,8 @@ import com.wicresoft.erp.web.controller.AbctractBaseController;
 @RequestMapping("/user")
 public class UserController extends AbctractBaseController {
 
-	private final static String userlistJSP = "user/userlist";
+	private final static String userAddJSP = "user/userAdd";
+	private final static String userListJSP = "user/userList";
 
 	/**
 	 * 用户列表
@@ -24,7 +25,18 @@ public class UserController extends AbctractBaseController {
 	@RequestMapping("/list.shtml")
 	public String list() {
 		log4j.info(System.currentTimeMillis());
-		return userlistJSP;
+		return userListJSP;
+	}
+	
+	/**
+	 * 用户列表
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/add.shtml")
+	public String add() {
+		log4j.info(System.currentTimeMillis());
+		return userAddJSP;
 	}
 
 }
