@@ -47,7 +47,7 @@ public class MyRealm extends AuthorizingRealm {
 	private final static String iv = "88888888";
 
 	/**
-	 *  授权
+	 *  授权 
 	 * 	shiro什么时候会进入doGetAuthorizationInfo(PrincipalCollection principals)
 	 *  会进入授权方法一共有三种情况！
 	 *	1、subject.hasRole(“admin”) 或 subject.isPermitted(“admin”)：自己去调用这个是否有什么角色或者是否有什么权限的时候；

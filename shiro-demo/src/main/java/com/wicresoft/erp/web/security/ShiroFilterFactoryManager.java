@@ -26,7 +26,7 @@ public class ShiroFilterFactoryManager {
 		System.out.println("\n***************** shiro_auth.ini *****************");
 		System.out.println(sb.toString());
 		System.out.println("**************************************************\n");
-		return sb.toString();
+		return sb.toString(); 
 	}
 	
 	/**
