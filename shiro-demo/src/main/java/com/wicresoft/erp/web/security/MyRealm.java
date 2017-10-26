@@ -90,7 +90,7 @@ public class MyRealm extends AuthorizingRealm {
 		log4j.info("password:" + password);
 		TUser user = userService.findUserByUserName(userName);
 		String encryptPassword = encryptPassword(password);
-		//如果用户的status为禁用。那么就抛出<code>DisabledAccountException</code>
+		//如果用户的status为禁用。那么就抛出<code>DisabledAccountException</code> 
 		if (user == null) {
 			throw new UnknownAccountException("用户不存在！");
 		}
