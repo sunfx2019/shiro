@@ -26,6 +26,8 @@
 	<task:annotation-driven scheduler="qbScheduler" mode="proxy" />
 	<task:scheduler id="qbScheduler" pool-size="10" />
 	
+	<bean name="applicationContextFactoryUtil" class="com.wicresoft.erp.core.util.ApplicationContextFactoryUtil" scope="singleton"></bean>
+	
 	<!-- 在这里加载全部 properties 文件 -->
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		 <property name="locations">

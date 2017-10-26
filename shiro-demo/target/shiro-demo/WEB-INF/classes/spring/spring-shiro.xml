@@ -18,37 +18,27 @@
 						http://www.springframework.org/schema/task/spring-task-4.0.xsd
 						">
 	
-	<aop:config proxy-target-class="true"></aop:config> 
-
-	<!-- Shiro的Web过滤器 -->
+	<!-- ShiroFilterFactoryManager 管理器 -->
+	<bean id="shiroFilterManager" class="com.wicresoft.erp.web.security.ShiroFilterFactoryManager"></bean>
+	
+	<!-- 会话Session ID生成器 -->
+	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+	
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login.shtml" />
 		<property name="successUrl" value="/index.shtml" />
 		<property name="unauthorizedUrl" value="/error/403.jsp" />
-		<!-- shiro拦截器配置 -->
+		<property name="filterChainDefinitions" value="#{shiroFilterManager.loadFilterChainDefinitions()}"/>
 		<property name="filters">
 			<map>
 				<entry key="authc" value-ref="formAuthenticationFilter" />
 			</map>
 		</property>
-		<property name="filterChainDefinitions">
-			<value>
-				<!-- anon表示此地址不需要任何权限即可访问 --> 
-				/error/** anon
-				/common/** anon
-				/resources/** anon
-				/index.html = anon
-				/login.shtml = anon
-				/loginCheck.shtml = anon
-				/loginOut.shtml = logout
-				<!-- roles[XX]表示有XX角色才可访问 -->
-				<!-- /userManager/list.action = roles[admin],authc -->
-                <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->      
-                /** = authc
-			</value>
-		</property>
 	</bean>
+
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
 	<!-- 缓存管理 -->  
     <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
@@ -60,7 +50,7 @@
 	</bean>
 
 	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
-		<property name="userService" ref="iUserServiceImpl"/>
+		<property name="userService" ref="userServiceImpl"/>
 	</bean>
 
 	<!--  

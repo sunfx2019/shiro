@@ -2,8 +2,8 @@ package com.wicresoft.erp.service.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wicresoft.erp.dao.TPermissionMapper;
@@ -14,14 +14,16 @@ import com.wicresoft.erp.entity.TRole;
 import com.wicresoft.erp.entity.TUser;
 import com.wicresoft.erp.service.IUserService;
 
-@Service("iUserServiceImpl")
+@Service("userServiceImpl")
 public class IUserServiceImpl implements IUserService {
 
-	@Resource
+	@Autowired
 	private TUserMapper tUserMapper;
-	@Resource
+	
+	@Autowired
 	private TRoleMapper tRoleMapper;
-	@Resource
+	
+	@Autowired
 	private TPermissionMapper tPermissionMapper;
 
 	@Override

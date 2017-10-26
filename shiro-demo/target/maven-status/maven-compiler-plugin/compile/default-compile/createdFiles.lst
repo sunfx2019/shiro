@@ -5,12 +5,12 @@ com\wicresoft\erp\core\util\CuptPageBean.class
 com\wicresoft\erp\entity\TRole.class
 com\wicresoft\erp\web\security\MyRealm.class
 com\wicresoft\erp\core\util\StringUtil.class
-com\wicresoft\erp\web\security\CustomCredentialsMatcher.class
 com\wicresoft\erp\core\util\Page.class
 com\wicresoft\erp\bean\AnnualOperating.class
 com\wicresoft\erp\bean\TokenPassingIO.class
 com\wicresoft\erp\bean\BusinessScaleResultBean.class
 com\wicresoft\erp\bean\zTree.class
+com\wicresoft\erp\service\impl\IPermissServiceImpl.class
 com\wicresoft\erp\core\util\RandomUUID.class
 com\wicresoft\erp\service\IUserService.class
 com\wicresoft\erp\web\security\encryption\ThreeDesUtil.class
@@ -26,10 +26,12 @@ com\wicresoft\erp\bean\BuildingAreaBean.class
 com\wicresoft\erp\entity\TPermission.class
 com\wicresoft\erp\bean\DataDictionaryObject.class
 com\wicresoft\erp\bean\Requirement.class
+com\wicresoft\erp\core\util\INI4j.class
 com\wicresoft\erp\entity\TUser.class
 com\wicresoft\erp\bean\CustomerServiceObject.class
 com\wicresoft\erp\web\controller\AbctractBaseController.class
 com\wicresoft\erp\web\interceptor\LogInterceptor.class
+com\wicresoft\erp\web\security\ShiroFilterFactoryManager.class
 com\wicresoft\erp\web\security\encryption\ShiroMD5.class
 com\wicresoft\erp\bean\ProcessObject.class
 com\wicresoft\erp\bean\SpaceProcess.class
@@ -44,6 +46,7 @@ com\wicresoft\erp\bean\TransitionObject.class
 com\wicresoft\erp\dao\TRoleMapper.class
 com\wicresoft\erp\dao\TPermissionMapper.class
 com\wicresoft\erp\web\security\encryption\MD5.class
+com\wicresoft\erp\service\IPermissService.class
 com\wicresoft\erp\core\util\DateUtil.class
 com\wicresoft\erp\bean\SpaceHisObj.class
 com\wicresoft\erp\bean\TenantObject.class

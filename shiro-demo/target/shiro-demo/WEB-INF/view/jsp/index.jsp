@@ -17,5 +17,8 @@
 	index.jsp
 	<hr>
 	<a href="<c:url value="/loginOut.shtml"/>">退出</a>
+	<shiro:hasRole name="admin">
+		哈罗~
+	</shiro:hasRole>	
 </body>
 </html>

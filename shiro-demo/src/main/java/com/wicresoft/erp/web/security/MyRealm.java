@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -16,6 +17,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 
 import com.alibaba.fastjson.JSONArray;
 import com.wicresoft.erp.entity.TPermission;
@@ -44,29 +46,41 @@ public class MyRealm extends AuthorizingRealm {
 
 	private final static String iv = "88888888";
 
+	/**
+	 *  授权
+	 * 	shiro什么时候会进入doGetAuthorizationInfo(PrincipalCollection principals)
+	 *  会进入授权方法一共有三种情况！
+	 *	1、subject.hasRole(“admin”) 或 subject.isPermitted(“admin”)：自己去调用这个是否有什么角色或者是否有什么权限的时候；
+	 *	2、@RequiresRoles("admin") ：在方法上加注解的时候；
+	 *	3、[@shiro.hasPermission name = "admin"][/@shiro.hasPermission]：在页面上加shiro标签的时候，即进这个页面的时候扫描到有这个标签的时候。
+	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		log4j.info("----------40 doGetAuthorizationInfo方法被调用----------");
 		String userName = (String) getAvailablePrincipal(principals);
 		List<TRole> rolsList = userService.findUserRoles(userName);
 		List<TPermission> permissionList = userService.findUserPermissions(userName);
+		//权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		// 权限
-		Set<String> s = new HashSet<String>();
-		for (TRole role : rolsList) {
-			s.add(role.getName());
-		}
-		// 角色
+		// 角色集合
+		Set<String> p = new HashSet<String>();
+		// 权限集合
 		Set<String> r = new HashSet<String>();
+		for (TRole role : rolsList) {
+			r.add(role.getName());
+		}
 		for (TPermission permission : permissionList) {
-			r.add(permission.getUrl());
+			p.add(permission.getUrl());
 		}
 		info.setRoles(r);
-		info.setStringPermissions(s);
+		info.setStringPermissions(p);
 		log4j.info(JSONArray.toJSON(info));
 		return info;
 	}
 
+	/**
+	 * 校验
+	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		log4j.info("----------68 doGetAuthenticationInfo方法被调用----------");
@@ -76,6 +90,7 @@ public class MyRealm extends AuthorizingRealm {
 		log4j.info("password:" + password);
 		TUser user = userService.findUserByUserName(userName);
 		String encryptPassword = encryptPassword(password);
+		//如果用户的status为禁用。那么就抛出<code>DisabledAccountException</code>
 		if (user == null) {
 			throw new UnknownAccountException("用户不存在！");
 		}
@@ -87,6 +102,24 @@ public class MyRealm extends AuthorizingRealm {
 		return aInfo;
 	}
 
+	/**
+     * 清空当前用户权限信息
+     */
+	public void clearCachedAuthorizationInfo() {
+		PrincipalCollection principalCollection = SecurityUtils.getSubject().getPrincipals();
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(
+				principalCollection, getName());
+		super.clearCachedAuthorizationInfo(principals);
+	}
+	/**
+	 * 指定principalCollection 清除
+	 */
+	public void clearCachedAuthorizationInfo(PrincipalCollection principalCollection) {
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(
+				principalCollection, getName());
+		super.clearCachedAuthorizationInfo(principals);
+	}
+	
 	/**
 	 * 密码加密
 	 * 

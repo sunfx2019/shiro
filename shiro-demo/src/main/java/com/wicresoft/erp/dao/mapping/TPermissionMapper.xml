@@ -21,6 +21,10 @@
 		select b.* from t_role t left join t_role_permission a on t.id = a.rid left join t_permission b on a.pid = b.id where t.name = #{userName,jdbcType=VARCHAR}
 	</select>
 	
+	<select id="getAll" resultMap="BaseResultMap">
+		select * from t_permission
+	</select>
+	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from t_permission
 		where id = #{id,jdbcType=BIGINT}

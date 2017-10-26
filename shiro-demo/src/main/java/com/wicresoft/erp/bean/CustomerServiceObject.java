@@ -1,8 +1,6 @@
 package com.wicresoft.erp.bean;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class CustomerServiceObject {
 	public Integer chengzuId;//承租人ID
