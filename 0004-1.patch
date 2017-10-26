@@ -1,0 +1,38 @@
+From bd5ca645c4629e1955f740f588b4a81af5222aea Mon Sep 17 00:00:00 2001
+From: sunfx870923 <123074528@qq.com>
+Date: Thu, 26 Oct 2017 15:00:46 +0800
+Subject: [PATCH 4/4] 1
+
+Signed-off-by: sunfx870923 <123074528@qq.com>
+---
+ shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java | 2 +-
+ shiro-demo/src/main/resources/shiro_auth.ini                         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java
+index 9045931..50faffa 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java
+@@ -90,7 +90,7 @@ public class MyRealm extends AuthorizingRealm {
+ 		log4j.info("password:" + password);
+ 		TUser user = userService.findUserByUserName(userName);
+ 		String encryptPassword = encryptPassword(password);
+-		//如果用户的status为禁用。那么就抛出<code>DisabledAccountException</code>
++		//如果用户的status为禁用。那么就抛出<code>DisabledAccountException</code> 
+ 		if (user == null) {
+ 			throw new UnknownAccountException("用户不存在！");
+ 		}
+diff --git a/shiro-demo/src/main/resources/shiro_auth.ini b/shiro-demo/src/main/resources/shiro_auth.ini
+index c3942d4..b780ba8 100644
+--- a/shiro-demo/src/main/resources/shiro_auth.ini
++++ b/shiro-demo/src/main/resources/shiro_auth.ini
+@@ -6,4 +6,4 @@
+ /login.shtml=anon
+ /loginCheck.shtml=anon
+ /loginOut.shtml=logout 
+-/**=authc
+\ No newline at end of file
++/**=authc
+-- 
+2.12.0.windows.1
+

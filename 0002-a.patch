@@ -1,0 +1,1271 @@
+From c947213b9032260910b573f7098e99e161e9cc9d Mon Sep 17 00:00:00 2001
+From: sunfx870923 <123074528@qq.com>
+Date: Thu, 26 Oct 2017 13:20:31 +0800
+Subject: [PATCH 2/4] a
+
+Signed-off-by: sunfx870923 <123074528@qq.com>
+---
+ shiro-demo/.classpath                              |   2 +-
+ shiro-demo/.settings/org.eclipse.jdt.core.prefs    |   6 -
+ .../wicresoft/erp/bean/CustomerServiceObject.java  |   2 -
+ .../java/com/wicresoft/erp/bean/TenantObject.java  |   1 -
+ .../java/com/wicresoft/erp/core/util/INI4j.java    | 157 +++++++++++++++++++++
+ .../com/wicresoft/erp/dao/TPermissionMapper.java   |  72 +++++-----
+ .../erp/dao/mapping/TPermissionMapper.xml          |   4 +
+ .../com/wicresoft/erp/service/IPermissService.java |  11 ++
+ .../erp/service/impl/IPermissServiceImpl.java      |  23 +++
+ .../erp/service/impl/IUserServiceImpl.java         |  12 +-
+ .../erp/web/security/CustomCredentialsMatcher.java |   7 -
+ .../com/wicresoft/erp/web/security/MyRealm.java    |  47 +++++-
+ .../web/security/ShiroFilterFactoryManager.java    |  86 +++++++++++
+ shiro-demo/src/main/resources/log4j.properties     |   5 +-
+ shiro-demo/src/main/resources/shiro_auth.ini       |   9 ++
+ .../main/resources/spring/spring-application.xml   |   2 +
+ .../src/main/resources/spring/spring-mvc.xml       |  14 +-
+ .../src/main/resources/spring/spring-shiro.xml     |  39 ++---
+ .../main/webapp/WEB-INF/view/jsp/common/taglib.jsp |   3 +-
+ .../src/main/webapp/WEB-INF/view/jsp/index.jsp     |   3 +
+ shiro-demo/src/main/webapp/WEB-INF/web.xml         |   5 +-
+ shiro-demo/target/classes/log4j.properties         |   5 +-
+ .../target/classes/spring/spring-application.xml   |   2 +
+ shiro-demo/target/classes/spring/spring-mvc.xml    |  14 +-
+ shiro-demo/target/classes/spring/spring-shiro.xml  |  39 ++---
+ .../maven/shiro-demo/shiro-demo/pom.properties     |   2 +-
+ shiro-demo/target/maven-archiver/pom.properties    |   2 +-
+ .../compile/default-compile/createdFiles.lst       |   5 +-
+ .../compile/default-compile/inputFiles.lst         |   5 +-
+ .../shiro-demo/WEB-INF/classes/log4j.properties    |   7 +-
+ .../WEB-INF/classes/spring/spring-application.xml  |   2 +
+ .../WEB-INF/classes/spring/spring-mvc.xml          |  14 +-
+ .../WEB-INF/classes/spring/spring-shiro.xml        |  32 ++---
+ .../target/shiro-demo/WEB-INF/view/jsp/index.jsp   |   3 +
+ shiro-demo/target/shiro-demo/WEB-INF/web.xml       |   5 +-
+ 35 files changed, 491 insertions(+), 156 deletions(-)
+ create mode 100644 shiro-demo/src/main/java/com/wicresoft/erp/core/util/INI4j.java
+ create mode 100644 shiro-demo/src/main/java/com/wicresoft/erp/service/IPermissService.java
+ create mode 100644 shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IPermissServiceImpl.java
+ delete mode 100644 shiro-demo/src/main/java/com/wicresoft/erp/web/security/CustomCredentialsMatcher.java
+ create mode 100644 shiro-demo/src/main/java/com/wicresoft/erp/web/security/ShiroFilterFactoryManager.java
+ create mode 100644 shiro-demo/src/main/resources/shiro_auth.ini
+
+diff --git a/shiro-demo/.classpath b/shiro-demo/.classpath
+index 3b073e7..93c176a 100644
+--- a/shiro-demo/.classpath
++++ b/shiro-demo/.classpath
+@@ -23,7 +23,7 @@
+ 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+ 		</attributes>
+ 	</classpathentry>
+-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
++	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+ 		<attributes>
+ 			<attribute name="owner.project.facets" value="java"/>
+ 		</attributes>
+diff --git a/shiro-demo/.settings/org.eclipse.jdt.core.prefs b/shiro-demo/.settings/org.eclipse.jdt.core.prefs
+index 6e80039..4ede96d 100644
+--- a/shiro-demo/.settings/org.eclipse.jdt.core.prefs
++++ b/shiro-demo/.settings/org.eclipse.jdt.core.prefs
+@@ -1,8 +1,2 @@
+ eclipse.preferences.version=1
+-org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
+-org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
+-org.eclipse.jdt.core.compiler.compliance=1.8
+-org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
+-org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
+ org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
+-org.eclipse.jdt.core.compiler.source=1.8
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/bean/CustomerServiceObject.java b/shiro-demo/src/main/java/com/wicresoft/erp/bean/CustomerServiceObject.java
+index 0ccb377..cd7dc66 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/bean/CustomerServiceObject.java
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/bean/CustomerServiceObject.java
+@@ -1,8 +1,6 @@
+ package com.wicresoft.erp.bean;
+ 
+-import java.util.ArrayList;
+ import java.util.Date;
+-import java.util.List;
+ 
+ public class CustomerServiceObject {
+ 	public Integer chengzuId;//承租人ID
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/bean/TenantObject.java b/shiro-demo/src/main/java/com/wicresoft/erp/bean/TenantObject.java
+index eb4f571..e0d89bd 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/bean/TenantObject.java
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/bean/TenantObject.java
+@@ -1,7 +1,6 @@
+ package com.wicresoft.erp.bean;
+ 
+ import java.util.Date;
+-import java.util.List;
+ 
+ public class TenantObject {
+ 	/*
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/core/util/INI4j.java b/shiro-demo/src/main/java/com/wicresoft/erp/core/util/INI4j.java
+new file mode 100644
+index 0000000..58f0bee
+--- /dev/null
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/core/util/INI4j.java
+@@ -0,0 +1,157 @@
++package com.wicresoft.erp.core.util;
++import java.io.BufferedReader;
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.io.FileReader;
++import java.io.IOException;
++import java.util.LinkedHashMap;
++import java.util.Map;
++
++import org.springframework.core.io.ClassPathResource;
++
++/**
++ * 有序读取 ini配置文件
++ * @author Administrator
++ *
++ */
++public class INI4j {
++    
++    /**
++     * 用linked hash map 来保持有序的读取
++     * 
++     */
++    final LinkedHashMap<String,LinkedHashMap<String, String>>  coreMap = new LinkedHashMap<String, LinkedHashMap<String,String>>();
++    /**
++     * 当前Section的引用
++     */
++    String currentSection = null;
++     
++	/**
++	 * 读取
++	 * @param file 文件
++	 * @throws FileNotFoundException 
++	 */
++	public INI4j(File file) throws FileNotFoundException {
++		this.init(new BufferedReader(new FileReader(file)));
++	}
++	/***
++	 * 重载读取
++	 * @param path 给文件路径
++	 * @throws FileNotFoundException 
++	 */
++	public INI4j(String path) throws FileNotFoundException {
++	    this.init(new BufferedReader(new FileReader(path)));
++	}
++	/***
++	 * 重载读取
++	 * @param source ClassPathResource 文件，如果文件在resource 里，那么直接 new ClassPathResource("file name");
++	 * @throws IOException 
++	 */
++	public INI4j(ClassPathResource source) throws IOException {
++		this(source.getFile());
++	}
++ 
++    void init(BufferedReader bufferedReader){
++    	try {
++    		read(bufferedReader);
++    	} catch (IOException e) {
++    		e.printStackTrace();
++    		throw new RuntimeException("IO Exception:" + e);
++    	}
++    }
++    /**
++     * 读取文件
++     * @param reader
++     * @throws IOException
++     */
++    void read(BufferedReader reader) throws IOException {
++        String line = null;
++        while((line=reader.readLine())!=null) {
++            parseLine(line);
++        }
++    }
++     
++    /**
++     * 转换
++     * @param line
++     */
++    void parseLine(String line) {
++        line = line.trim();
++        // 此部分为注释
++        if(line.matches("^\\#.*$")) {
++            return;
++        }else if (line.matches("^\\[\\S+\\]$")) {
++            // section
++            String section = line.replaceFirst("^\\[(\\S+)\\]$","$1");
++            addSection(section);
++        }else if (line.matches("^\\S+=.*$")) {
++            // key ,value
++            int i = line.indexOf("=");
++            String key = line.substring(0, i).trim();
++            String value =line.substring(i + 1).trim();
++            addKeyValue(currentSection,key,value);
++        }
++    }
++ 
++ 
++    /**
++     * 增加新的Key和Value
++     * @param currentSection
++     * @param key
++     * @param value
++     */
++    void addKeyValue(String currentSection,String key, String value) {
++        if(!coreMap.containsKey(currentSection)) {
++            return;
++        }
++        Map<String, String> childMap = coreMap.get(currentSection);
++        childMap.put(key, value);
++    }
++ 
++ 
++    /**
++     * 增加Section
++     * @param section
++     */
++    void addSection(String section) {
++        if (!coreMap.containsKey(section)) {
++            currentSection = section;
++            LinkedHashMap<String,String> childMap = new LinkedHashMap<String,String>();
++            coreMap.put(section, childMap);
++        }
++    }
++     
++    /**
++     * 获取配置文件指定Section和指定子键的值
++     * @param section
++     * @param key
++     * @return
++     */
++    public String get(String section,String key){
++        if(coreMap.containsKey(section)) {
++            return  get(section).containsKey(key) ?  get(section).get(key): null;
++        }
++        return null;
++    }
++     
++     
++     
++    /**
++     * 获取配置文件指定Section的子键和值
++     * @param section
++     * @return
++     */
++    public Map<String, String> get(String section){
++        return  coreMap.containsKey(section) ? coreMap.get(section) : null;
++    }
++     
++    /**
++     * 获取这个配置文件的节点和值
++     * @return
++     */
++    public LinkedHashMap<String, LinkedHashMap<String, String>> get(){
++        return coreMap;
++    }
++     
++}
++
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/dao/TPermissionMapper.java b/shiro-demo/src/main/java/com/wicresoft/erp/dao/TPermissionMapper.java
+index 19803cc..69e8e27 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/dao/TPermissionMapper.java
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/dao/TPermissionMapper.java
+@@ -5,41 +5,43 @@ import java.util.List;
+ import com.wicresoft.erp.entity.TPermission;
+ 
+ public interface TPermissionMapper {
+-    /**
+-     *
+-     * @mbggenerated 2017-10-25
+-     */
+-    int deleteByPrimaryKey(Long id);
+-
+-    /**
+-     *
+-     * @mbggenerated 2017-10-25
+-     */
+-    int insert(TPermission record);
+-
+-    /**
+-     *
+-     * @mbggenerated 2017-10-25
+-     */
+-    int insertSelective(TPermission record);
+-
+-    /**
+-     *
+-     * @mbggenerated 2017-10-25
+-     */
+-    TPermission selectByPrimaryKey(Long id);
++	/**
++	 *
++	 * @mbggenerated 2017-10-25
++	 */
++	int deleteByPrimaryKey(Long id);
++
++	/**
++	 *
++	 * @mbggenerated 2017-10-25
++	 */
++	int insert(TPermission record);
++
++	/**
++	 *
++	 * @mbggenerated 2017-10-25
++	 */
++	int insertSelective(TPermission record);
++
++	/**
++	 *
++	 * @mbggenerated 2017-10-25
++	 */
++	TPermission selectByPrimaryKey(Long id);
+ 
+ 	List<TPermission> findUserPermissions(String userName);
+-
+-    /**
+-     *
+-     * @mbggenerated 2017-10-25
+-     */
+-    int updateByPrimaryKeySelective(TPermission record);
+-
+-    /**
+-     *
+-     * @mbggenerated 2017-10-25
+-     */
+-    int updateByPrimaryKey(TPermission record);
++	
++	List<TPermission> getAll();
++
++	/**
++	 *
++	 * @mbggenerated 2017-10-25
++	 */
++	int updateByPrimaryKeySelective(TPermission record);
++
++	/**
++	 *
++	 * @mbggenerated 2017-10-25
++	 */
++	int updateByPrimaryKey(TPermission record);
+ }
+\ No newline at end of file
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/dao/mapping/TPermissionMapper.xml b/shiro-demo/src/main/java/com/wicresoft/erp/dao/mapping/TPermissionMapper.xml
+index a1a8921..32334cb 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/dao/mapping/TPermissionMapper.xml
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/dao/mapping/TPermissionMapper.xml
+@@ -21,6 +21,10 @@
+ 		select b.* from t_role t left join t_role_permission a on t.id = a.rid left join t_permission b on a.pid = b.id where t.name = #{userName,jdbcType=VARCHAR}
+ 	</select>
+ 	
++	<select id="getAll" resultMap="BaseResultMap">
++		select * from t_permission
++	</select>
++	
+ 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+ 		delete from t_permission
+ 		where id = #{id,jdbcType=BIGINT}
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/service/IPermissService.java b/shiro-demo/src/main/java/com/wicresoft/erp/service/IPermissService.java
+new file mode 100644
+index 0000000..208fd44
+--- /dev/null
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/service/IPermissService.java
+@@ -0,0 +1,11 @@
++package com.wicresoft.erp.service;
++
++import java.util.List;
++
++import com.wicresoft.erp.entity.TPermission;
++
++public interface IPermissService {
++
++	public List<TPermission> findAll();
++	
++}
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IPermissServiceImpl.java b/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IPermissServiceImpl.java
+new file mode 100644
+index 0000000..fdddaa5
+--- /dev/null
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IPermissServiceImpl.java
+@@ -0,0 +1,23 @@
++package com.wicresoft.erp.service.impl;
++
++import java.util.List;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import com.wicresoft.erp.dao.TPermissionMapper;
++import com.wicresoft.erp.entity.TPermission;
++import com.wicresoft.erp.service.IPermissService;
++
++@Service("permissServiceImpl")
++public class IPermissServiceImpl implements IPermissService {
++
++	@Autowired
++	private TPermissionMapper tPermissionMapper;
++
++	@Override
++	public List<TPermission> findAll() {
++		return tPermissionMapper.getAll();
++	}
++
++}
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IUserServiceImpl.java b/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IUserServiceImpl.java
+index 4764af8..582b2f8 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IUserServiceImpl.java
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/service/impl/IUserServiceImpl.java
+@@ -2,8 +2,8 @@ package com.wicresoft.erp.service.impl;
+ 
+ import java.util.List;
+ 
+-import javax.annotation.Resource;
+ 
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+ 
+ import com.wicresoft.erp.dao.TPermissionMapper;
+@@ -14,14 +14,16 @@ import com.wicresoft.erp.entity.TRole;
+ import com.wicresoft.erp.entity.TUser;
+ import com.wicresoft.erp.service.IUserService;
+ 
+-@Service("iUserServiceImpl")
++@Service("userServiceImpl")
+ public class IUserServiceImpl implements IUserService {
+ 
+-	@Resource
++	@Autowired
+ 	private TUserMapper tUserMapper;
+-	@Resource
++	
++	@Autowired
+ 	private TRoleMapper tRoleMapper;
+-	@Resource
++	
++	@Autowired
+ 	private TPermissionMapper tPermissionMapper;
+ 
+ 	@Override
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/CustomCredentialsMatcher.java b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/CustomCredentialsMatcher.java
+deleted file mode 100644
+index 5a91b13..0000000
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/CustomCredentialsMatcher.java
++++ /dev/null
+@@ -1,7 +0,0 @@
+-package com.wicresoft.erp.web.security;
+-
+-import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+-
+-public class CustomCredentialsMatcher extends SimpleCredentialsMatcher {  
+-
+-}
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java
+index 59c09bb..bf34642 100644
+--- a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/MyRealm.java
+@@ -6,6 +6,7 @@ import java.util.Set;
+ 
+ import org.apache.commons.logging.Log;
+ import org.apache.commons.logging.LogFactory;
++import org.apache.shiro.SecurityUtils;
+ import org.apache.shiro.authc.AuthenticationException;
+ import org.apache.shiro.authc.AuthenticationInfo;
+ import org.apache.shiro.authc.AuthenticationToken;
+@@ -16,6 +17,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
+ import org.apache.shiro.authz.SimpleAuthorizationInfo;
+ import org.apache.shiro.realm.AuthorizingRealm;
+ import org.apache.shiro.subject.PrincipalCollection;
++import org.apache.shiro.subject.SimplePrincipalCollection;
+ 
+ import com.alibaba.fastjson.JSONArray;
+ import com.wicresoft.erp.entity.TPermission;
+@@ -44,29 +46,41 @@ public class MyRealm extends AuthorizingRealm {
+ 
+ 	private final static String iv = "88888888";
+ 
++	/**
++	 *  授权
++	 * 	shiro什么时候会进入doGetAuthorizationInfo(PrincipalCollection principals)
++	 *  会进入授权方法一共有三种情况！
++	 *	1、subject.hasRole(“admin”) 或 subject.isPermitted(“admin”)：自己去调用这个是否有什么角色或者是否有什么权限的时候；
++	 *	2、@RequiresRoles("admin") ：在方法上加注解的时候；
++	 *	3、[@shiro.hasPermission name = "admin"][/@shiro.hasPermission]：在页面上加shiro标签的时候，即进这个页面的时候扫描到有这个标签的时候。
++	 */
+ 	@Override
+ 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+ 		log4j.info("----------40 doGetAuthorizationInfo方法被调用----------");
+ 		String userName = (String) getAvailablePrincipal(principals);
+ 		List<TRole> rolsList = userService.findUserRoles(userName);
+ 		List<TPermission> permissionList = userService.findUserPermissions(userName);
++		//权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
+ 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+-		// 权限
+-		Set<String> s = new HashSet<String>();
++		// 角色集合
++		Set<String> p = new HashSet<String>();
++		// 权限集合
++		Set<String> r = new HashSet<String>();
+ 		for (TRole role : rolsList) {
+-			s.add(role.getName());
++			r.add(role.getName());
+ 		}
+-		// 角色
+-		Set<String> r = new HashSet<String>();
+ 		for (TPermission permission : permissionList) {
+-			r.add(permission.getUrl());
++			p.add(permission.getUrl());
+ 		}
+ 		info.setRoles(r);
+-		info.setStringPermissions(s);
++		info.setStringPermissions(p);
+ 		log4j.info(JSONArray.toJSON(info));
+ 		return info;
+ 	}
+ 
++	/**
++	 * 校验
++	 */
+ 	@Override
+ 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+ 		log4j.info("----------68 doGetAuthenticationInfo方法被调用----------");
+@@ -76,6 +90,7 @@ public class MyRealm extends AuthorizingRealm {
+ 		log4j.info("password:" + password);
+ 		TUser user = userService.findUserByUserName(userName);
+ 		String encryptPassword = encryptPassword(password);
++		//如果用户的status为禁用。那么就抛出<code>DisabledAccountException</code>
+ 		if (user == null) {
+ 			throw new UnknownAccountException("用户不存在！");
+ 		}
+@@ -88,6 +103,24 @@ public class MyRealm extends AuthorizingRealm {
+ 	}
+ 
+ 	/**
++     * 清空当前用户权限信息
++     */
++	public void clearCachedAuthorizationInfo() {
++		PrincipalCollection principalCollection = SecurityUtils.getSubject().getPrincipals();
++		SimplePrincipalCollection principals = new SimplePrincipalCollection(
++				principalCollection, getName());
++		super.clearCachedAuthorizationInfo(principals);
++	}
++	/**
++	 * 指定principalCollection 清除
++	 */
++	public void clearCachedAuthorizationInfo(PrincipalCollection principalCollection) {
++		SimplePrincipalCollection principals = new SimplePrincipalCollection(
++				principalCollection, getName());
++		super.clearCachedAuthorizationInfo(principals);
++	}
++	
++	/**
+ 	 * 密码加密
+ 	 * 
+ 	 * @param password
+diff --git a/shiro-demo/src/main/java/com/wicresoft/erp/web/security/ShiroFilterFactoryManager.java b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/ShiroFilterFactoryManager.java
+new file mode 100644
+index 0000000..24d84c4
+--- /dev/null
++++ b/shiro-demo/src/main/java/com/wicresoft/erp/web/security/ShiroFilterFactoryManager.java
+@@ -0,0 +1,86 @@
++package com.wicresoft.erp.web.security;
++
++import java.io.IOException;
++import java.util.Map;
++import java.util.Set;
++
++import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
++import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
++import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
++import org.apache.shiro.web.servlet.AbstractShiroFilter;
++ import org.springframework.core.io.ClassPathResource;
++
++import com.wicresoft.erp.core.util.ApplicationContextFactoryUtil;
++import com.wicresoft.erp.core.util.INI4j;
++
++public class ShiroFilterFactoryManager {
++	
++	private final String SHIROFILTERFACTORYBEAN = "shiroFilterFactoryBean";
++	
++	// 注意/r/n前不能有空格
++	private static final String CRLF = "\r\n";
++
++	public String loadFilterChainDefinitions() {
++		StringBuffer sb = new StringBuffer();
++		sb.append(getINIAuthRule());
++		System.out.println("\n***************** shiro_auth.ini *****************");
++		System.out.println(sb.toString());
++		System.out.println("**************************************************\n");
++		return sb.toString();
++	}
++	
++	/**
++	 * 从配额文件获取固定权限验证规则串
++	 */
++	private String getINIAuthRule(){
++		String fileName = "shiro_auth.ini";
++		ClassPathResource cp = new ClassPathResource(fileName);
++		INI4j ini = null;
++		try {
++			ini = new INI4j(cp.getFile());
++		} catch (IOException e) {
++			e.printStackTrace();
++		}
++		String section = "base_auth";
++		Set<String> keys = ini.get(section).keySet();
++		StringBuffer sb = new StringBuffer();
++		for (String key : keys) {
++			String value = ini.get(section, key);
++			sb.append(key).append(" = ")
++			.append(value).append(CRLF);
++		}
++		return sb.toString();
++	}
++
++	// 此方法加同步锁
++	public synchronized void reCreateFilterChains() {
++		ShiroFilterFactoryBean shiroFilterFactoryBean = (ShiroFilterFactoryBean) ApplicationContextFactoryUtil.getBean(SHIROFILTERFACTORYBEAN);
++		AbstractShiroFilter shiroFilter = null;
++		try {
++			shiroFilter = (AbstractShiroFilter) shiroFilterFactoryBean.getObject();
++		} catch (Exception e) {
++			e.printStackTrace();
++			throw new RuntimeException("get ShiroFilter from shiroFilterFactoryBean error!");
++		}
++
++		PathMatchingFilterChainResolver filterChainResolver = (PathMatchingFilterChainResolver) shiroFilter.getFilterChainResolver();
++		DefaultFilterChainManager manager = (DefaultFilterChainManager) filterChainResolver.getFilterChainManager();
++
++		// 清空老的权限控制
++		manager.getFilterChains().clear();
++
++		shiroFilterFactoryBean.getFilterChainDefinitionMap().clear();
++		shiroFilterFactoryBean.setFilterChainDefinitions(loadFilterChainDefinitions());	//加载INI配置
++		
++		// 重新构建生成
++		Map<String, String> chains = shiroFilterFactoryBean.getFilterChainDefinitionMap();
++		for (Map.Entry<String, String> entry : chains.entrySet()) {
++			String url = entry.getKey();
++			String chainDefinition = entry.getValue().trim().replace(" ", "");
++			manager.createChain(url, chainDefinition);
++		}
++
++	}
++
++}
++
+diff --git a/shiro-demo/src/main/resources/log4j.properties b/shiro-demo/src/main/resources/log4j.properties
+index a3001ba..ae4c8f7 100644
+--- a/shiro-demo/src/main/resources/log4j.properties
++++ b/shiro-demo/src/main/resources/log4j.properties
+@@ -16,12 +16,11 @@
+ # \u6BCF\u5929\u751F\u6210\u4E00\u4E2A\u6587\u4EF6\u3000\u8BBE\u7F6E\u4E3AFileApp\uFF0CConApp\u3000
+ 
+ log4j.rootCategory=FileApp, ConApp
+-log4j.category.java.sql=info
+-log4j.category.freemarker=error
++#log4j.category.java.sql=info
++#log4j.category.freemarker=error
+ log4j.category.org.springframework=info
+ log4j.category.org.apache=info
+ log4j.category.org.mybatis=info
+-log4j.category.org.hibernate=info
+ log4j.category.com.ibatis=info
+ log4j.category.com.alibaba.druid=debug
+ log4j.category.com.wicresoft.erp=debug
+diff --git a/shiro-demo/src/main/resources/shiro_auth.ini b/shiro-demo/src/main/resources/shiro_auth.ini
+new file mode 100644
+index 0000000..c3942d4
+--- /dev/null
++++ b/shiro-demo/src/main/resources/shiro_auth.ini
+@@ -0,0 +1,9 @@
++[base_auth]
++/error/**=anon
++/common/**=anon
++/resources/**=anon
++/index.html=anon
++/login.shtml=anon
++/loginCheck.shtml=anon
++/loginOut.shtml=logout 
++/**=authc
+\ No newline at end of file
+diff --git a/shiro-demo/src/main/resources/spring/spring-application.xml b/shiro-demo/src/main/resources/spring/spring-application.xml
+index ce09db2..3f92ac5 100644
+--- a/shiro-demo/src/main/resources/spring/spring-application.xml
++++ b/shiro-demo/src/main/resources/spring/spring-application.xml
+@@ -26,6 +26,8 @@
+ 	<task:annotation-driven scheduler="qbScheduler" mode="proxy" />
+ 	<task:scheduler id="qbScheduler" pool-size="10" />
+ 	
++	<bean name="applicationContextFactoryUtil" class="com.wicresoft.erp.core.util.ApplicationContextFactoryUtil" scope="singleton"></bean>
++	
+ 	<!-- 在这里加载全部 properties 文件 -->
+ 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+ 		 <property name="locations">
+diff --git a/shiro-demo/src/main/resources/spring/spring-mvc.xml b/shiro-demo/src/main/resources/spring/spring-mvc.xml
+index 6b7a3bb..4e99779 100644
+--- a/shiro-demo/src/main/resources/spring/spring-mvc.xml
++++ b/shiro-demo/src/main/resources/spring/spring-mvc.xml
+@@ -2,15 +2,25 @@
+ <beans xmlns="http://www.springframework.org/schema/beans"
+ 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+ 	xmlns:context="http://www.springframework.org/schema/context"
+-	xmlns:mvc="http://www.springframework.org/schema/mvc"
++	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
++	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+ 	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd    
+                         http://www.springframework.org/schema/context    
+                         http://www.springframework.org/schema/context/spring-context-4.0.xsd    
+                         http://www.springframework.org/schema/mvc    
+-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
++                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
++                        http://www.springframework.org/schema/tx  
++						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
++						http://www.springframework.org/schema/aop  
++						http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
++						http://www.springframework.org/schema/task  
++						http://www.springframework.org/schema/task/spring-task-4.0.xsd
++						">
+ 
+ 
++	<aop:config proxy-target-class="true"/>
++	
+ 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+ 	<context:component-scan base-package="com.wicresoft.erp.web.controller" />
+ 
+diff --git a/shiro-demo/src/main/resources/spring/spring-shiro.xml b/shiro-demo/src/main/resources/spring/spring-shiro.xml
+index 50a05d3..6558f36 100644
+--- a/shiro-demo/src/main/resources/spring/spring-shiro.xml
++++ b/shiro-demo/src/main/resources/spring/spring-shiro.xml
+@@ -18,40 +18,30 @@
+ 						http://www.springframework.org/schema/task/spring-task-4.0.xsd
+ 						">
+ 	
+-	<aop:config proxy-target-class="true"></aop:config> 
+-
+-	<!-- Shiro的Web过滤器 -->
++	<!-- ShiroFilterFactoryManager 管理器 -->
++	<bean id="shiroFilterManager" class="com.wicresoft.erp.web.security.ShiroFilterFactoryManager"/>
++	
++	<!-- 会话Session ID生成器 -->
++	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
++	
+ 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+ 		<property name="securityManager" ref="securityManager" />
+ 		<property name="loginUrl" value="/login.shtml" />
+ 		<property name="successUrl" value="/index.shtml" />
+ 		<property name="unauthorizedUrl" value="/error/403.jsp" />
+-		<!-- shiro拦截器配置 -->
++		<property name="filterChainDefinitions" value="#{shiroFilterManager.loadFilterChainDefinitions()}"/>
+ 		<property name="filters">
+ 			<map>
+ 				<entry key="authc" value-ref="formAuthenticationFilter" />
+ 			</map>
+ 		</property>
+-		<property name="filterChainDefinitions">
+-			<value>
+-				<!-- anon表示此地址不需要任何权限即可访问 --> 
+-				/error/** anon
+-				/common/** anon
+-				/resources/** anon
+-				/index.html = anon
+-				/login.shtml = anon
+-				/loginCheck.shtml = anon
+-				/loginOut.shtml = logout
+-				<!-- roles[XX]表示有XX角色才可访问 -->
+-				<!-- /userManager/list.action = roles[admin],authc -->
+-                <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->      
+-                /** = authc
+-			</value>
+-		</property>
+ 	</bean>
+ 
++	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
++	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
++
+ 	<!-- 缓存管理 -->  
+-    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
++    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
+ 
+ 	<!-- 安全管理器 -->
+ 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+@@ -60,7 +50,7 @@
+ 	</bean>
+ 
+ 	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
+-		<property name="userService" ref="iUserServiceImpl"/>
++		<property name="userService" ref="userServiceImpl"/>
+ 	</bean>
+ 
+ 	<!--  
+@@ -74,13 +64,14 @@
+ 		<property name="credentialsMatcher" ref="hashedCredentialsMatcher" />
+ 	</bean>
+ 	-->
+-
+ 	<!-- 加密 -->
++	<!-- 
+ 	<bean id="hashedCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+ 		<property name="hashAlgorithmName" value="MD5" />
+ 		<property name="storedCredentialsHexEncoded" value="true" />
+ 		<property name="hashIterations" value="1" />
+-	</bean>
++	</bean> 
++	-->
+ 	
+ 	<!-- 基于Form表单的身份验证过滤器，不配置将也会注册此过虑器，表单中的用户账号、密码及loginurl将采用默认值，建议配置 -->
+ 	<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+diff --git a/shiro-demo/src/main/webapp/WEB-INF/view/jsp/common/taglib.jsp b/shiro-demo/src/main/webapp/WEB-INF/view/jsp/common/taglib.jsp
+index 5e9e59b..0f30b12 100644
+--- a/shiro-demo/src/main/webapp/WEB-INF/view/jsp/common/taglib.jsp
++++ b/shiro-demo/src/main/webapp/WEB-INF/view/jsp/common/taglib.jsp
+@@ -2,4 +2,5 @@
+ <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+ <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+ <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+\ No newline at end of file
++<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
++<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
+\ No newline at end of file
+diff --git a/shiro-demo/src/main/webapp/WEB-INF/view/jsp/index.jsp b/shiro-demo/src/main/webapp/WEB-INF/view/jsp/index.jsp
+index dfd9594..7afec94 100644
+--- a/shiro-demo/src/main/webapp/WEB-INF/view/jsp/index.jsp
++++ b/shiro-demo/src/main/webapp/WEB-INF/view/jsp/index.jsp
+@@ -17,5 +17,8 @@
+ 	index.jsp
+ 	<hr>
+ 	<a href="<c:url value="/loginOut.shtml"/>">退出</a>
++	<shiro:hasRole name="admin">
++		哈罗~
++	</shiro:hasRole>	
+ </body>
+ </html>
+\ No newline at end of file
+diff --git a/shiro-demo/src/main/webapp/WEB-INF/web.xml b/shiro-demo/src/main/webapp/WEB-INF/web.xml
+index aef68ce..d4c7bdc 100644
+--- a/shiro-demo/src/main/webapp/WEB-INF/web.xml
++++ b/shiro-demo/src/main/webapp/WEB-INF/web.xml
+@@ -48,6 +48,7 @@
+ 	<filter>
+ 		<filter-name>shiroFilter</filter-name>
+ 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
++		<!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 -->
+ 		<init-param>
+ 			<param-name>targetFilterLifecycle</param-name>
+ 			<param-value>true</param-value>
+@@ -93,7 +94,9 @@
+ 		<init-param>
+ 			<param-name>contextConfigLocation</param-name>
+ 			<param-value>classpath:spring/spring-mvc.xml</param-value>
+-		</init-param>
++		</init-param>     
++		
++		  
+ 		<load-on-startup>1</load-on-startup>
+ 		<async-supported>true</async-supported>
+ 	</servlet>
+diff --git a/shiro-demo/target/classes/log4j.properties b/shiro-demo/target/classes/log4j.properties
+index a3001ba..ae4c8f7 100644
+--- a/shiro-demo/target/classes/log4j.properties
++++ b/shiro-demo/target/classes/log4j.properties
+@@ -16,12 +16,11 @@
+ # \u6BCF\u5929\u751F\u6210\u4E00\u4E2A\u6587\u4EF6\u3000\u8BBE\u7F6E\u4E3AFileApp\uFF0CConApp\u3000
+ 
+ log4j.rootCategory=FileApp, ConApp
+-log4j.category.java.sql=info
+-log4j.category.freemarker=error
++#log4j.category.java.sql=info
++#log4j.category.freemarker=error
+ log4j.category.org.springframework=info
+ log4j.category.org.apache=info
+ log4j.category.org.mybatis=info
+-log4j.category.org.hibernate=info
+ log4j.category.com.ibatis=info
+ log4j.category.com.alibaba.druid=debug
+ log4j.category.com.wicresoft.erp=debug
+diff --git a/shiro-demo/target/classes/spring/spring-application.xml b/shiro-demo/target/classes/spring/spring-application.xml
+index ce09db2..3f92ac5 100644
+--- a/shiro-demo/target/classes/spring/spring-application.xml
++++ b/shiro-demo/target/classes/spring/spring-application.xml
+@@ -26,6 +26,8 @@
+ 	<task:annotation-driven scheduler="qbScheduler" mode="proxy" />
+ 	<task:scheduler id="qbScheduler" pool-size="10" />
+ 	
++	<bean name="applicationContextFactoryUtil" class="com.wicresoft.erp.core.util.ApplicationContextFactoryUtil" scope="singleton"></bean>
++	
+ 	<!-- 在这里加载全部 properties 文件 -->
+ 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+ 		 <property name="locations">
+diff --git a/shiro-demo/target/classes/spring/spring-mvc.xml b/shiro-demo/target/classes/spring/spring-mvc.xml
+index 6b7a3bb..4e99779 100644
+--- a/shiro-demo/target/classes/spring/spring-mvc.xml
++++ b/shiro-demo/target/classes/spring/spring-mvc.xml
+@@ -2,15 +2,25 @@
+ <beans xmlns="http://www.springframework.org/schema/beans"
+ 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+ 	xmlns:context="http://www.springframework.org/schema/context"
+-	xmlns:mvc="http://www.springframework.org/schema/mvc"
++	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
++	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+ 	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd    
+                         http://www.springframework.org/schema/context    
+                         http://www.springframework.org/schema/context/spring-context-4.0.xsd    
+                         http://www.springframework.org/schema/mvc    
+-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
++                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
++                        http://www.springframework.org/schema/tx  
++						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
++						http://www.springframework.org/schema/aop  
++						http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
++						http://www.springframework.org/schema/task  
++						http://www.springframework.org/schema/task/spring-task-4.0.xsd
++						">
+ 
+ 
++	<aop:config proxy-target-class="true"/>
++	
+ 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+ 	<context:component-scan base-package="com.wicresoft.erp.web.controller" />
+ 
+diff --git a/shiro-demo/target/classes/spring/spring-shiro.xml b/shiro-demo/target/classes/spring/spring-shiro.xml
+index 50a05d3..6558f36 100644
+--- a/shiro-demo/target/classes/spring/spring-shiro.xml
++++ b/shiro-demo/target/classes/spring/spring-shiro.xml
+@@ -18,40 +18,30 @@
+ 						http://www.springframework.org/schema/task/spring-task-4.0.xsd
+ 						">
+ 	
+-	<aop:config proxy-target-class="true"></aop:config> 
+-
+-	<!-- Shiro的Web过滤器 -->
++	<!-- ShiroFilterFactoryManager 管理器 -->
++	<bean id="shiroFilterManager" class="com.wicresoft.erp.web.security.ShiroFilterFactoryManager"/>
++	
++	<!-- 会话Session ID生成器 -->
++	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
++	
+ 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+ 		<property name="securityManager" ref="securityManager" />
+ 		<property name="loginUrl" value="/login.shtml" />
+ 		<property name="successUrl" value="/index.shtml" />
+ 		<property name="unauthorizedUrl" value="/error/403.jsp" />
+-		<!-- shiro拦截器配置 -->
++		<property name="filterChainDefinitions" value="#{shiroFilterManager.loadFilterChainDefinitions()}"/>
+ 		<property name="filters">
+ 			<map>
+ 				<entry key="authc" value-ref="formAuthenticationFilter" />
+ 			</map>
+ 		</property>
+-		<property name="filterChainDefinitions">
+-			<value>
+-				<!-- anon表示此地址不需要任何权限即可访问 --> 
+-				/error/** anon
+-				/common/** anon
+-				/resources/** anon
+-				/index.html = anon
+-				/login.shtml = anon
+-				/loginCheck.shtml = anon
+-				/loginOut.shtml = logout
+-				<!-- roles[XX]表示有XX角色才可访问 -->
+-				<!-- /userManager/list.action = roles[admin],authc -->
+-                <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->      
+-                /** = authc
+-			</value>
+-		</property>
+ 	</bean>
+ 
++	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
++	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
++
+ 	<!-- 缓存管理 -->  
+-    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
++    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
+ 
+ 	<!-- 安全管理器 -->
+ 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+@@ -60,7 +50,7 @@
+ 	</bean>
+ 
+ 	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
+-		<property name="userService" ref="iUserServiceImpl"/>
++		<property name="userService" ref="userServiceImpl"/>
+ 	</bean>
+ 
+ 	<!--  
+@@ -74,13 +64,14 @@
+ 		<property name="credentialsMatcher" ref="hashedCredentialsMatcher" />
+ 	</bean>
+ 	-->
+-
+ 	<!-- 加密 -->
++	<!-- 
+ 	<bean id="hashedCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+ 		<property name="hashAlgorithmName" value="MD5" />
+ 		<property name="storedCredentialsHexEncoded" value="true" />
+ 		<property name="hashIterations" value="1" />
+-	</bean>
++	</bean> 
++	-->
+ 	
+ 	<!-- 基于Form表单的身份验证过滤器，不配置将也会注册此过虑器，表单中的用户账号、密码及loginurl将采用默认值，建议配置 -->
+ 	<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+diff --git a/shiro-demo/target/m2e-wtp/web-resources/META-INF/maven/shiro-demo/shiro-demo/pom.properties b/shiro-demo/target/m2e-wtp/web-resources/META-INF/maven/shiro-demo/shiro-demo/pom.properties
+index 835722e..2bf3e72 100644
+--- a/shiro-demo/target/m2e-wtp/web-resources/META-INF/maven/shiro-demo/shiro-demo/pom.properties
++++ b/shiro-demo/target/m2e-wtp/web-resources/META-INF/maven/shiro-demo/shiro-demo/pom.properties
+@@ -1,5 +1,5 @@
+ #Generated by Maven Integration for Eclipse
+-#Wed Oct 25 16:17:54 CST 2017
++#Thu Oct 26 13:09:12 CST 2017
+ version=0.0.1-SNAPSHOT
+ groupId=shiro-demo
+ m2e.projectName=shiro-demo
+diff --git a/shiro-demo/target/maven-archiver/pom.properties b/shiro-demo/target/maven-archiver/pom.properties
+index 5df07a4..e429682 100644
+--- a/shiro-demo/target/maven-archiver/pom.properties
++++ b/shiro-demo/target/maven-archiver/pom.properties
+@@ -1,5 +1,5 @@
+ #Generated by Maven
+-#Wed Oct 25 17:26:09 CST 2017
++#Thu Oct 26 00:28:37 CST 2017
+ version=0.0.1-SNAPSHOT
+ groupId=shiro-demo
+ artifactId=shiro-demo
+diff --git a/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst b/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+index 3e8b946..0e06266 100644
+--- a/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
++++ b/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+@@ -5,12 +5,12 @@ com\wicresoft\erp\core\util\CuptPageBean.class
+ com\wicresoft\erp\entity\TRole.class
+ com\wicresoft\erp\web\security\MyRealm.class
+ com\wicresoft\erp\core\util\StringUtil.class
+-com\wicresoft\erp\web\security\CustomCredentialsMatcher.class
+ com\wicresoft\erp\core\util\Page.class
+ com\wicresoft\erp\bean\AnnualOperating.class
+ com\wicresoft\erp\bean\TokenPassingIO.class
+ com\wicresoft\erp\bean\BusinessScaleResultBean.class
+ com\wicresoft\erp\bean\zTree.class
++com\wicresoft\erp\service\impl\IPermissServiceImpl.class
+ com\wicresoft\erp\core\util\RandomUUID.class
+ com\wicresoft\erp\service\IUserService.class
+ com\wicresoft\erp\web\security\encryption\ThreeDesUtil.class
+@@ -26,10 +26,12 @@ com\wicresoft\erp\bean\BuildingAreaBean.class
+ com\wicresoft\erp\entity\TPermission.class
+ com\wicresoft\erp\bean\DataDictionaryObject.class
+ com\wicresoft\erp\bean\Requirement.class
++com\wicresoft\erp\core\util\INI4j.class
+ com\wicresoft\erp\entity\TUser.class
+ com\wicresoft\erp\bean\CustomerServiceObject.class
+ com\wicresoft\erp\web\controller\AbctractBaseController.class
+ com\wicresoft\erp\web\interceptor\LogInterceptor.class
++com\wicresoft\erp\web\security\ShiroFilterFactoryManager.class
+ com\wicresoft\erp\web\security\encryption\ShiroMD5.class
+ com\wicresoft\erp\bean\ProcessObject.class
+ com\wicresoft\erp\bean\SpaceProcess.class
+@@ -44,6 +46,7 @@ com\wicresoft\erp\bean\TransitionObject.class
+ com\wicresoft\erp\dao\TRoleMapper.class
+ com\wicresoft\erp\dao\TPermissionMapper.class
+ com\wicresoft\erp\web\security\encryption\MD5.class
++com\wicresoft\erp\service\IPermissService.class
+ com\wicresoft\erp\core\util\DateUtil.class
+ com\wicresoft\erp\bean\SpaceHisObj.class
+ com\wicresoft\erp\bean\TenantObject.class
+diff --git a/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst b/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+index e5136e4..d6bee8d 100644
+--- a/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
++++ b/shiro-demo/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+@@ -9,18 +9,20 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\dao\TPermissi
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\dao\TRoleMapper.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\dao\TUserMapper.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\OccupancyTemplate.java
++D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\IPermissService.java
++D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\ShiroFilterFactoryManager.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\SpaceHisObj.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\Requirement.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\entity\TPermission.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\controller\IndexController.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\impl\IUserServiceImpl.java
++D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\impl\IPermissServiceImpl.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\GenericsUtils.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\interceptor\LogInterceptor.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\BuildingAreaBean.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\ApplicationContextFactoryUtil.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\HttpRequestUtil.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\ScheduleJob.java
+-D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\CustomCredentialsMatcher.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\encryption\ShiroMD5.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\DataDictionaryObject.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\JavaScriptUtil.java
+@@ -44,6 +46,7 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\IUser
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\zTree.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\StringUtil.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\encryption\Base64Util.java
++D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\INI4j.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\encryption\MD5.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\TransitionObject.java
+ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\DateUtil.java
+diff --git a/shiro-demo/target/shiro-demo/WEB-INF/classes/log4j.properties b/shiro-demo/target/shiro-demo/WEB-INF/classes/log4j.properties
+index a3001ba..e71ac51 100644
+--- a/shiro-demo/target/shiro-demo/WEB-INF/classes/log4j.properties
++++ b/shiro-demo/target/shiro-demo/WEB-INF/classes/log4j.properties
+@@ -16,12 +16,11 @@
+ # \u6BCF\u5929\u751F\u6210\u4E00\u4E2A\u6587\u4EF6\u3000\u8BBE\u7F6E\u4E3AFileApp\uFF0CConApp\u3000
+ 
+ log4j.rootCategory=FileApp, ConApp
+-log4j.category.java.sql=info
+-log4j.category.freemarker=error
+-log4j.category.org.springframework=info
++#log4j.category.java.sql=info
++#log4j.category.freemarker=error
++log4j.category.org.springframework=debug
+ log4j.category.org.apache=info
+ log4j.category.org.mybatis=info
+-log4j.category.org.hibernate=info
+ log4j.category.com.ibatis=info
+ log4j.category.com.alibaba.druid=debug
+ log4j.category.com.wicresoft.erp=debug
+diff --git a/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-application.xml b/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-application.xml
+index ce09db2..3f92ac5 100644
+--- a/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-application.xml
++++ b/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-application.xml
+@@ -26,6 +26,8 @@
+ 	<task:annotation-driven scheduler="qbScheduler" mode="proxy" />
+ 	<task:scheduler id="qbScheduler" pool-size="10" />
+ 	
++	<bean name="applicationContextFactoryUtil" class="com.wicresoft.erp.core.util.ApplicationContextFactoryUtil" scope="singleton"></bean>
++	
+ 	<!-- 在这里加载全部 properties 文件 -->
+ 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+ 		 <property name="locations">
+diff --git a/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-mvc.xml b/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-mvc.xml
+index 6b7a3bb..4e99779 100644
+--- a/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-mvc.xml
++++ b/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-mvc.xml
+@@ -2,15 +2,25 @@
+ <beans xmlns="http://www.springframework.org/schema/beans"
+ 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+ 	xmlns:context="http://www.springframework.org/schema/context"
+-	xmlns:mvc="http://www.springframework.org/schema/mvc"
++	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
++	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+ 	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd    
+                         http://www.springframework.org/schema/context    
+                         http://www.springframework.org/schema/context/spring-context-4.0.xsd    
+                         http://www.springframework.org/schema/mvc    
+-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
++                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
++                        http://www.springframework.org/schema/tx  
++						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
++						http://www.springframework.org/schema/aop  
++						http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
++						http://www.springframework.org/schema/task  
++						http://www.springframework.org/schema/task/spring-task-4.0.xsd
++						">
+ 
+ 
++	<aop:config proxy-target-class="true"/>
++	
+ 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+ 	<context:component-scan base-package="com.wicresoft.erp.web.controller" />
+ 
+diff --git a/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-shiro.xml b/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-shiro.xml
+index 50a05d3..961bf26 100644
+--- a/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-shiro.xml
++++ b/shiro-demo/target/shiro-demo/WEB-INF/classes/spring/spring-shiro.xml
+@@ -18,38 +18,28 @@
+ 						http://www.springframework.org/schema/task/spring-task-4.0.xsd
+ 						">
+ 	
+-	<aop:config proxy-target-class="true"></aop:config> 
+-
+-	<!-- Shiro的Web过滤器 -->
++	<!-- ShiroFilterFactoryManager 管理器 -->
++	<bean id="shiroFilterManager" class="com.wicresoft.erp.web.security.ShiroFilterFactoryManager"></bean>
++	
++	<!-- 会话Session ID生成器 -->
++	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
++	
+ 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+ 		<property name="securityManager" ref="securityManager" />
+ 		<property name="loginUrl" value="/login.shtml" />
+ 		<property name="successUrl" value="/index.shtml" />
+ 		<property name="unauthorizedUrl" value="/error/403.jsp" />
+-		<!-- shiro拦截器配置 -->
++		<property name="filterChainDefinitions" value="#{shiroFilterManager.loadFilterChainDefinitions()}"/>
+ 		<property name="filters">
+ 			<map>
+ 				<entry key="authc" value-ref="formAuthenticationFilter" />
+ 			</map>
+ 		</property>
+-		<property name="filterChainDefinitions">
+-			<value>
+-				<!-- anon表示此地址不需要任何权限即可访问 --> 
+-				/error/** anon
+-				/common/** anon
+-				/resources/** anon
+-				/index.html = anon
+-				/login.shtml = anon
+-				/loginCheck.shtml = anon
+-				/loginOut.shtml = logout
+-				<!-- roles[XX]表示有XX角色才可访问 -->
+-				<!-- /userManager/list.action = roles[admin],authc -->
+-                <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->      
+-                /** = authc
+-			</value>
+-		</property>
+ 	</bean>
+ 
++	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
++	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
++
+ 	<!-- 缓存管理 -->  
+     <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
+ 
+@@ -60,7 +50,7 @@
+ 	</bean>
+ 
+ 	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
+-		<property name="userService" ref="iUserServiceImpl"/>
++		<property name="userService" ref="userServiceImpl"/>
+ 	</bean>
+ 
+ 	<!--  
+diff --git a/shiro-demo/target/shiro-demo/WEB-INF/view/jsp/index.jsp b/shiro-demo/target/shiro-demo/WEB-INF/view/jsp/index.jsp
+index dfd9594..7afec94 100644
+--- a/shiro-demo/target/shiro-demo/WEB-INF/view/jsp/index.jsp
++++ b/shiro-demo/target/shiro-demo/WEB-INF/view/jsp/index.jsp
+@@ -17,5 +17,8 @@
+ 	index.jsp
+ 	<hr>
+ 	<a href="<c:url value="/loginOut.shtml"/>">退出</a>
++	<shiro:hasRole name="admin">
++		哈罗~
++	</shiro:hasRole>	
+ </body>
+ </html>
+\ No newline at end of file
+diff --git a/shiro-demo/target/shiro-demo/WEB-INF/web.xml b/shiro-demo/target/shiro-demo/WEB-INF/web.xml
+index aef68ce..d4c7bdc 100644
+--- a/shiro-demo/target/shiro-demo/WEB-INF/web.xml
++++ b/shiro-demo/target/shiro-demo/WEB-INF/web.xml
+@@ -48,6 +48,7 @@
+ 	<filter>
+ 		<filter-name>shiroFilter</filter-name>
+ 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
++		<!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 -->
+ 		<init-param>
+ 			<param-name>targetFilterLifecycle</param-name>
+ 			<param-value>true</param-value>
+@@ -93,7 +94,9 @@
+ 		<init-param>
+ 			<param-name>contextConfigLocation</param-name>
+ 			<param-value>classpath:spring/spring-mvc.xml</param-value>
+-		</init-param>
++		</init-param>     
++		
++		  
+ 		<load-on-startup>1</load-on-startup>
+ 		<async-supported>true</async-supported>
+ 	</servlet>
+-- 
+2.12.0.windows.1
+
