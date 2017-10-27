@@ -15,6 +15,7 @@ import org.apache.shiro.web.util.WebUtils;
 
 import com.wicresoft.erp.core.util.HttpRequestUtil;
 
+
 /**
  * 资源URL校验 Filter
  * 
@@ -57,7 +58,7 @@ public class PermissionFilter extends AccessControlFilter {
 			return Boolean.TRUE;
 		}
 
-		if (HttpRequestUtil.isAjax(request)) {
+		if (HttpRequestUtil.isAjax(httpRequest)) {
 			Map<String, String> resultMap = new HashMap<String, String>();
 			//System.out.println("当前用户没有登录，并且是Ajax请求！");
 			resultMap.put("login_status", "300");
@@ -74,10 +75,10 @@ public class PermissionFilter extends AccessControlFilter {
 		Subject subject = getSubject(request, response);
 		if (null == subject.getPrincipal()) { // 表示没有登录，重定向到登录页面
 			saveRequest(request);
-			WebUtils.issueRedirect(request, response, ShiroPermissionFactory.LOGIN_URL);
+			WebUtils.issueRedirect(request, response, ShiroFilterFactoryBeanManage.LOGIN_URL);
 		} else {
-			if (StringUtils.hasText(ShiroPermissionFactory.UNAUTHORIZED_URL)) { // 如果有未授权页面跳转过去
-				WebUtils.issueRedirect(request, response, ShiroPermissionFactory.UNAUTHORIZED_URL);
+			if (StringUtils.hasText(ShiroFilterFactoryBeanManage.UNAUTHORIZED_URL)) { // 如果有未授权页面跳转过去
+				WebUtils.issueRedirect(request, response, ShiroFilterFactoryBeanManage.UNAUTHORIZED_URL);
 			} else {// 否则返回401未授权状态码
 				WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			}

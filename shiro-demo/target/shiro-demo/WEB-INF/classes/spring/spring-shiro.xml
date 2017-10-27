@@ -21,20 +21,50 @@
 	<!-- 会话Session ID生成器 -->
 	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
 	
-	<!-- 自定义ShiroFilterFactoryBean -->
-	<bean id="shiroFilter" class="com.wicresoft.erp.web.security.ShiroPermissionFactory">
-		<property name="userService" ref="userServiceImpl" />
-		<property name="permissService" ref="permissServiceImpl" />
+	<!-- 自定义ShiroFilterFactoryBean管理器-->
+	<bean id="shiroFilterManage" class="com.wicresoft.erp.web.security.ShiroFilterFactoryBeanManage">
+		<property name="userService" ref="userServiceImpl"/>
+		<property name="permissService" ref="permissServiceImpl"/>
+	</bean>
+
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+	<!-- 缓存管理 -->  
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
+
+	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
+		<property name="userService" ref="userServiceImpl"/>
+	</bean>
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+	<!-- 认证过滤器 -->
+	<bean id="login" class="com.wicresoft.erp.web.security.LoginFilter"/>
+	<bean id="anyRolesFilter" class="com.wicresoft.erp.web.security.RoleFilter"/>
+	<bean id="permissionFilter" class="com.wicresoft.erp.web.security.PermissionFilter"/>
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login.shtml" />
 		<property name="successUrl" value="/index.shtml" />
 		<property name="unauthorizedUrl" value="/error/403.jsp" />
+		<property name="filterChainDefinitions" value="#{shiroFilterManage.loadFilterChainDefinitions()}"/>
 		<property name="filters">
 			<map>
-				<entry key="role" value-ref="roleFilter" />
+				<!-- 注意：/xxxx/** = user,anyRoles[system,general]， 注意红色的"anyRoles"一定要和
+				<entry key="anyRoles" value-ref="anyRoles"/> key一样就行， 否则过滤器不起作用，同样permission也一样 
+				-->
+				<entry key="authc" value-ref="formAuthenticationFilter" />
+				<entry key="anyRoles" value-ref="anyRolesFilter" />
 				<entry key="permission" value-ref="permissionFilter" />
 			</map>
 		</property>
+		<!--  
 		<property name="filterChainDefinitions">
 			<value>
 				/error/** = anon
@@ -44,28 +74,18 @@
 				/login.shtml = anon
 				/loginCheck.shtml = anon
 				/loginOut.shtml = logout
+				/user/list.shtml = authc, permission[admin,guest]
 				/** = authc
 			</value>
 		</property>
+		-->
 	</bean>
-
-	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
-
-	<!-- 缓存管理 -->  
-    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
-
-	<!-- 安全管理器 -->
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="myRealm" />
-		<property name="cacheManager" ref="cacheManager" />
+	
+	<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+		<property name="usernameParam" value="username" />
+		<property name="passwordParam" value="password" />
+		<!-- <property name="rememberMeParam" value="rememberMe"/> -->
+		<property name="loginUrl" value="/login.shtml" />
 	</bean>
-
-	<bean id="myRealm" class="com.wicresoft.erp.web.security.MyRealm">
-		<property name="userService" ref="userServiceImpl"/>
-	</bean>
-
-	<bean id="roleFilter" class="com.wicresoft.erp.web.security.RoleFilter"/>
-	<bean id="permissionFilter" class="com.wicresoft.erp.web.security.PermissionFilter"/>
-
+	
 </beans>

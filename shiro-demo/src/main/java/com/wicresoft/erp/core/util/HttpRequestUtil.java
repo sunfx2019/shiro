@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -362,9 +361,8 @@ public class HttpRequestUtil {
 	 * @param request
 	 * @return
 	 */
-	public static boolean isAjax(ServletRequest request){
-		HttpServletRequest req = (HttpServletRequest)request;
-		return  (req.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(req.getHeader("X-Requested-With").toString())) ;
+	public static boolean isAjax(HttpServletRequest request){
+		return  (request.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString())) ;
 	}
 	
 	/**
