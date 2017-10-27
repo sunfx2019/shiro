@@ -54,7 +54,7 @@ public class MyRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		log4j.info("----------40 doGetAuthorizationInfo方法被调用----------");
+		log4j.info("----------doGetAuthorizationInfo 查询and授权角色资源----------");
 		String userName = (String) getAvailablePrincipal(principals);
 		List<String> rolsList = userService.findUserRoles(userName);
 		List<String> permissionList = userService.findUserPermissions(userName);
@@ -72,6 +72,7 @@ public class MyRealm extends AuthorizingRealm {
 		}
 		info.setRoles(r);
 		info.setStringPermissions(p);
+		log4j.info(JSONArray.toJSON(principals));
 		log4j.info(JSONArray.toJSON(info));
 		return info;
 	}
@@ -81,7 +82,7 @@ public class MyRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-		log4j.info("----------68 doGetAuthenticationInfo方法被调用----------");
+		log4j.info("----------doGetAuthenticationInfo 登陆校验----------");
 		String userName = (String) token.getPrincipal(); // 用户名
 		String password = new String((char[]) token.getCredentials()); // 密码
 		log4j.info("userName:" + userName);
