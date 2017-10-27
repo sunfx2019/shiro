@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
-		<title>没权限</title>
+		<title>403</title>
 		<style type="text/css">
 		/* 注意、警告框 */
 		.attention {

@@ -37,6 +37,7 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\SpacePro
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\RandomUUID.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\MyRealm.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\BusinessScaleResultBean.java
+D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\VerifyCodeUtils.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\AnnualOperating.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\RequestToMethodItem.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\Page.java

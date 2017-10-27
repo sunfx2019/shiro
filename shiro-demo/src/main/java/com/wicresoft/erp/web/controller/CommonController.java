@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +24,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.wicresoft.erp.bean.RequestToMethodItem;
+import com.wicresoft.erp.core.util.VerifyCodeUtils;
 import com.wicresoft.erp.web.controller.base.AbctractBaseController;
 
 /**
@@ -32,6 +38,32 @@ import com.wicresoft.erp.web.controller.base.AbctractBaseController;
 public class CommonController extends AbctractBaseController {
 
 	private static final String mappings_jsp = "mappingList";
+	
+	public Log log4j = LogFactory.getLog(getClass());
+	
+	/**
+	 * 获取验证码
+	 * @param response
+	 */
+	@RequestMapping(value="getVCode",method=RequestMethod.GET)
+	public void getVCode(HttpServletResponse response,HttpServletRequest request){
+		try {
+			response.setHeader("Pragma", "No-cache");  
+	        response.setHeader("Cache-Control", "no-cache");  
+	        response.setDateHeader("Expires", 0);  
+	        response.setContentType("image/jpg");  
+	        
+	        //生成随机字串  
+	        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);  
+	        //存入Shiro会话session  
+	        //TokenManager.setVal2Session(VerifyCodeUtils.V_CODE, verifyCode.toLowerCase());  
+	        //生成图片  
+	        int w = 146, h = 33;  
+	        VerifyCodeUtils.outputImage(w, h, response.getOutputStream(), verifyCode); 
+		} catch (Exception e) {
+			log4j.error(e.getMessage(), e);
+		}
+	}
 	
 	/**
 	 * 查看全部的 Controller 映射的URL
