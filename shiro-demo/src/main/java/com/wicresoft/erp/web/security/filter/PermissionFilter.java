@@ -1,4 +1,4 @@
-package com.wicresoft.erp.web.security;
+package com.wicresoft.erp.web.security.filter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +14,7 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 
 import com.wicresoft.erp.core.util.HttpRequestUtil;
+import com.wicresoft.erp.web.security.ShiroFilterFactoryBeanManage;
 
 
 /**
@@ -28,21 +29,9 @@ public class PermissionFilter extends AccessControlFilter {
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
 
-		System.out.println("***************************************************************");
-		System.out.println("PermissionFilter.isAccessAllowed");
-		System.out.println("***************************************************************");
-		
 		// 先判断带参数的权限判断
 		Subject subject = getSubject(request, response);
-		if (null != mappedValue) {
-			String[] arra = (String[]) mappedValue;
-			for (String permission : arra) {
-				if (subject.isPermitted(permission)) {
-					return Boolean.TRUE;
-				}
-			}
-		}
-
+		
 		HttpServletRequest httpRequest = ((HttpServletRequest) request);
 		HttpServletResponse httpResponse = ((HttpServletResponse) response);
 

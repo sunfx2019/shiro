@@ -1,5 +1,4 @@
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\CustomerServiceObject.java
-D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\RoleFilter.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\entity\TRole.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\InetAddressUtil.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\RoleId.java
@@ -14,8 +13,7 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\Occupanc
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\IPermissService.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\SpaceHisObj.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\Requirement.java
-D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\LoginFilter.java
-D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\PermissionFilter.java
+D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\filter\PermissionFilter.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\entity\TPermission.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\controller\IndexController.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\impl\IUserServiceImpl.java
@@ -32,7 +30,9 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\DataDict
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\JavaScriptUtil.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\PropertiesUtil.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\encryption\ThreeDesUtil.java
+D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\filter\LoginFilter.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\controller\CommonController.java
+D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\filter\RoleFilter.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\SpaceProcess.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\RandomUUID.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\MyRealm.java

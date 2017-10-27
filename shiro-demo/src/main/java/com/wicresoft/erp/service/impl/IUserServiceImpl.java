@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.wicresoft.erp.dao.TPermissionMapper;
 import com.wicresoft.erp.dao.TRoleMapper;
 import com.wicresoft.erp.dao.TUserMapper;
-import com.wicresoft.erp.entity.TRole;
 import com.wicresoft.erp.entity.TUser;
 import com.wicresoft.erp.service.IUserService;
 
@@ -31,7 +30,7 @@ public class IUserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public List<TRole> findUserRoles(String userName) {
+	public List<String> findUserRoles(String userName) {
 		return tRoleMapper.findUserRoles(userName);
 	}
 

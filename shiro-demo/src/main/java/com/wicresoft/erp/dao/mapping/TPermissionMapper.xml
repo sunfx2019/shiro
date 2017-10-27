@@ -18,9 +18,7 @@
 	</select>
 	
 	<select id="findUserPermissions" resultType="java.lang.String" parameterType="java.lang.String">
-		select distinct(p.url) from t_user u, t_role r, t_user_role ur, t_role_permission rp, t_permission p
-		where u.id = ur.uid and ur.rid = r.id and r.id = rp.rid and rp.pid = p.id
-		and u.nickname = #{userName,jdbcType=VARCHAR}
+		select distinct(p.url) from t_user u, t_role r, t_user_role ur, t_role_permission rp, t_permission p where u.id = ur.uid and ur.rid = r.id and r.id = rp.rid and rp.pid = p.id and u.nickname = #{userName,jdbcType=VARCHAR}
 	</select>
 	
 	<select id="getAll" resultMap="BaseResultMap">

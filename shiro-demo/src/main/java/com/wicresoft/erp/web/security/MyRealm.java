@@ -20,7 +20,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 
 import com.alibaba.fastjson.JSONArray;
-import com.wicresoft.erp.entity.TRole;
 import com.wicresoft.erp.entity.TUser;
 import com.wicresoft.erp.service.IUserService;
 import com.wicresoft.erp.web.security.encryption.ThreeDesUtil;
@@ -57,16 +56,16 @@ public class MyRealm extends AuthorizingRealm {
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		log4j.info("----------40 doGetAuthorizationInfo方法被调用----------");
 		String userName = (String) getAvailablePrincipal(principals);
-		List<TRole> rolsList = userService.findUserRoles(userName);
+		List<String> rolsList = userService.findUserRoles(userName);
 		List<String> permissionList = userService.findUserPermissions(userName);
 		//权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		// 角色集合
-		Set<String> p = new HashSet<String>();
-		// 权限集合
 		Set<String> r = new HashSet<String>();
-		for (TRole role : rolsList) {
-			r.add(role.getName());
+		// 权限集合
+		Set<String> p = new HashSet<String>();
+		for (String roleName : rolsList) {
+			r.add(roleName);
 		}
 		for (String url : permissionList) {
 			p.add(url);
@@ -78,7 +77,7 @@ public class MyRealm extends AuthorizingRealm {
 	}
 
 	/**
-	 * 校验
+	 * 登陆校验
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -106,16 +105,14 @@ public class MyRealm extends AuthorizingRealm {
      */
 	public void clearCachedAuthorizationInfo() {
 		PrincipalCollection principalCollection = SecurityUtils.getSubject().getPrincipals();
-		SimplePrincipalCollection principals = new SimplePrincipalCollection(
-				principalCollection, getName());
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(principalCollection, getName());
 		super.clearCachedAuthorizationInfo(principals);
 	}
 	/**
 	 * 指定principalCollection 清除
 	 */
 	public void clearCachedAuthorizationInfo(PrincipalCollection principalCollection) {
-		SimplePrincipalCollection principals = new SimplePrincipalCollection(
-				principalCollection, getName());
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(principalCollection, getName());
 		super.clearCachedAuthorizationInfo(principals);
 	}
 	

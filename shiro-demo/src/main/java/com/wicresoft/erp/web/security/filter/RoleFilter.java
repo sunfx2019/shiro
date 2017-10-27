@@ -1,4 +1,4 @@
-package com.wicresoft.erp.web.security;
+package com.wicresoft.erp.web.security.filter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -8,6 +8,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+
+import com.wicresoft.erp.web.security.ShiroFilterFactoryBeanManage;
 
 /**
  * 角色校验
@@ -24,9 +26,6 @@ public class RoleFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
-		System.out.println("***************************************************************");
-		System.out.println("PermissionFilter.isAccessAllowed");
-		System.out.println("***************************************************************");
 		Subject subject = getSubject(request, response);
 		String[] rolesArray = (String[]) mappedValue;
 		if (rolesArray == null || rolesArray.length == 0) {

@@ -35,7 +35,7 @@ public interface TRoleMapper {
 	 * @param userName
 	 * @return
 	 */
-	List<TRole> findUserRoles(String userName);
+	List<String> findUserRoles(String userName);
 
 	/**
 	 *

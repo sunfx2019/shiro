@@ -45,14 +45,13 @@ public class ShiroFilterFactoryBeanManage {
 
 	public String loadFilterChainDefinitions() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(getFixedAuthRule()); // 添加配置文件
-		sb.append(getDBAuthRule()); // 添加DB中的配置
+		sb.append(this.getFixedAuthRule()); // 添加配置文件
+		sb.append(this.getDBAuthRule()); // 添加DB中的配置
 		sb.append(lastDefinitions);	//最后必须加这个才能生效
 		System.out.println(CRLF);
-		System.out.println("filterChainDefinitions:");
-		System.out.println("************************************************************");
+		System.out.println("**********************************************************************");
 		System.out.println(sb.toString());
-		System.out.println("************************************************************");
+		System.out.println("**********************************************************************");
 		System.out.println(CRLF);
 		return sb.toString();
 	}
@@ -82,14 +81,12 @@ public class ShiroFilterFactoryBeanManage {
 	 * 添加DB中的动态权限
 	 */
 	public String getDBAuthRule() {
-
 		// 返回 Map<RoleName, URL>
 		List<Map<Object, Object>> list = permissService.findPermissionRole(); // 查询DB中的角色权限URL关系
 		// 存放<URL,List<Role>>
 		Map<String, List<String>> permissionsRoleMap = new HashMap<String, List<String>>();
 		// 组装DB中的definitions
 		StringBuffer definitions = new StringBuffer();
-
 		for (Map<Object, Object> map : list) {
 			String roleName = String.valueOf(map.get("name"));
 			String url = String.valueOf(map.get("url"));
@@ -102,23 +99,17 @@ public class ShiroFilterFactoryBeanManage {
 				permissionsRoleMap.put(url, roles);
 			}
 		}
-
 		Iterator<String> it = permissionsRoleMap.keySet().iterator();
 		while (it.hasNext()) {
 			String url = it.next();
 			List<String> roles = permissionsRoleMap.get(url);
-			// String str = "/user/list.shtml = authc, permission[admin,guest]";
 			definitions.append(url);
 			definitions.append("=");
-			definitions.append("authc,permission");
-			definitions.append("[");
-			definitions.append(StringUtils.join(roles.toArray(), ","));
-			definitions.append("]");
+			definitions.append("authc,login,permission,anyRoles");	//分别调用相对应的过滤器
+			definitions.append("[").append(StringUtils.join(roles.toArray(), ",")).append("]");
 			definitions.append(CRLF);
 		}
-
 		return definitions.toString();
-
 	}
 
 	/**
@@ -127,9 +118,9 @@ public class ShiroFilterFactoryBeanManage {
 	public void reloadFilterChains() {
 
 		synchronized (this) { // 强制同步，控制线程安全
-			ShiroFilterFactoryBean shiroFilter = ApplicationContextFactoryUtil.getBean(SHIROFILTERFACTORY_BEANNAME,
-					ShiroFilterFactoryBean.class);
+			ShiroFilterFactoryBean shiroFilter = ApplicationContextFactoryUtil.getBean(SHIROFILTERFACTORY_BEANNAME, ShiroFilterFactoryBean.class);
 			log4j.info(shiroFilter);
+			//...待完善
 		}
 
 	}

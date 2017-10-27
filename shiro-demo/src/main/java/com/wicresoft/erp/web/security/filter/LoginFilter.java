@@ -1,4 +1,4 @@
-package com.wicresoft.erp.web.security;
+package com.wicresoft.erp.web.security.filter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,22 +24,19 @@ public class LoginFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
-
 		HttpServletRequest httpRequest = ((HttpServletRequest) request);
 		HttpServletResponse httpResponse = ((HttpServletResponse) response);
-
 		if (null != SecurityUtils.getSubject().getPrincipal() || isLoginRequest(request, response)) {
 			return Boolean.TRUE;
 		}
 		if (HttpRequestUtil.isAjax(httpRequest)) {// ajax请求
 			Map<String, String> resultMap = new HashMap<String, String>();
-			System.out.println("当前用户没有登录，并且是Ajax请求！");
+			//System.out.println("当前用户没有登录，并且是Ajax请求！");
 			resultMap.put("login_status", "300");
 			resultMap.put("message", "当前用户没有登录！"); // 当前用户没有登录！
 			HttpRequestUtil.renderJson(httpResponse, resultMap);
 		}
 		return Boolean.FALSE;
-
 	}
 
 	@Override

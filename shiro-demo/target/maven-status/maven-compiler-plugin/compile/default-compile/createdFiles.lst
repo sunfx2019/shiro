@@ -1,5 +1,3 @@
-com\wicresoft\erp\web\security\LoginFilter.class
-com\wicresoft\erp\web\security\RoleFilter.class
 com\wicresoft\erp\bean\ScheduleJob.class
 com\wicresoft\erp\core\util\GenericsUtils.class
 com\wicresoft\erp\web\controller\IndexController.class
@@ -22,7 +20,6 @@ com\wicresoft\erp\web\security\encryption\Base64Util.class
 com\wicresoft\erp\bean\RequestToMethodItem.class
 com\wicresoft\erp\core\util\InetAddressUtil.class
 com\wicresoft\erp\web\controller\LoginController.class
-com\wicresoft\erp\web\security\PermissionFilter.class
 com\wicresoft\erp\web\controller\CommonController.class
 com\wicresoft\erp\core\util\ApplicationContextFactoryUtil.class
 com\wicresoft\erp\service\impl\IUserServiceImpl.class
