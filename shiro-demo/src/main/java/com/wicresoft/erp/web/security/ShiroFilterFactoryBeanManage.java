@@ -49,9 +49,9 @@ public class ShiroFilterFactoryBeanManage {
 		sb.append(this.getDBAuthRule()); // 添加DB中的配置
 		sb.append(lastDefinitions);	//最后必须加这个才能生效
 		System.out.println(CRLF);
-		System.out.println("**********************************************************************");
+		System.out.println("*****************************************************************************************************");
 		System.out.println(sb.toString());
-		System.out.println("**********************************************************************");
+		System.out.println("*****************************************************************************************************");
 		System.out.println(CRLF);
 		return sb.toString();
 	}
@@ -72,7 +72,7 @@ public class ShiroFilterFactoryBeanManage {
 		StringBuffer sb = new StringBuffer();
 		for (String key : keys) {
 			String value = ini.get(section, key);
-			sb.append(key).append(" = ").append(value).append(CRLF);
+			sb.append(key).append("=").append(value).append(CRLF);
 		}
 		return sb.toString();
 	}
