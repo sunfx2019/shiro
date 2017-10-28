@@ -7,8 +7,7 @@
 		<result column="email" property="email" jdbcType="VARCHAR" />
 		<result column="pswd" property="pswd" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="last_login_time" property="lastLoginTime"
-			jdbcType="TIMESTAMP" />
+		<result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
 		<result column="status" property="status" jdbcType="BIGINT" />
 	</resultMap>
 	<sql id="Base_Column_List">
@@ -20,6 +19,10 @@
 		<include refid="Base_Column_List" />
 		from t_user
 		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="fiandAll" resultMap="BaseResultMap">
+		select * from t_user
 	</select>
 
 	<select id="finByUserName" resultMap="BaseResultMap"

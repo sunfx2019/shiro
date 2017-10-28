@@ -25,6 +25,11 @@ public class IUserServiceImpl implements IUserService {
 	private TPermissionMapper tPermissionMapper;
 
 	@Override
+	public List<TUser> fiandAll() {
+		return tUserMapper.fiandAll();
+	}
+
+	@Override
 	public TUser findUserByUserName(String userName) {
 		return tUserMapper.finByUserName(userName);
 	}

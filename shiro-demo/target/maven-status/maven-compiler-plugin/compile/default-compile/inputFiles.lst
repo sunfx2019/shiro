@@ -2,6 +2,7 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\Customer
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\entity\TRole.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\InetAddressUtil.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\RoleId.java
+D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\controller\RolesController.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\ProcessObject.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\CuptPageBean.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\security\ShiroFilterFactoryBeanManage.java
@@ -21,6 +22,7 @@ D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\service\impl\
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\GenericsUtils.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\interceptor\LogInterceptor.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\BuildingAreaBean.java
+D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\web\controller\ResourcesController.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\ApplicationContextFactoryUtil.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\core\util\HttpRequestUtil.java
 D:\Workspace\neon\shiro\shiro-demo\src\main\java\com\wicresoft\erp\bean\ScheduleJob.java

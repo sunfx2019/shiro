@@ -1,5 +1,7 @@
 package com.wicresoft.erp.dao;
 
+import java.util.List;
+
 import com.wicresoft.erp.entity.TUser;
 
 public interface TUserMapper {
@@ -25,6 +27,8 @@ public interface TUserMapper {
 	 *
 	 * @mbggenerated 2017-10-25
 	 */
+	public List<TUser> fiandAll();
+
 	TUser selectByPrimaryKey(Long id);
 
 	TUser finByUserName(String userName);

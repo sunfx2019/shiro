@@ -43,8 +43,8 @@ $(function(){
     </div>
     	<ul class="menuson">
 	        <li class=""><cite></cite><a href="${pageContext.request.contextPath}/user/list.shtml" target="rightFrame">用户列表</a><i></i></li>
-	        <li><cite></cite><a href="imgtable.html" target="rightFrame">角色管理</a><i></i></li>
-	        <li><cite></cite><a href="form.html" target="rightFrame">资源管理</a><i></i></li>
+	        <li><cite></cite><a href="${pageContext.request.contextPath}/role/list.shtml" target="rightFrame">角色管理</a><i></i></li>
+	        <li><cite></cite><a href="${pageContext.request.contextPath}/resources/list.shtml" target="rightFrame">资源管理</a><i></i></li>
         </ul>    
     </dd>
         
@@ -54,19 +54,19 @@ $(function(){
     <span><img src="${pageContext.request.contextPath}/resources/images/leftico02.png" /></span>学生管理
     </div>
     	<ul class="menuson">
-	        <li><cite></cite><a href="#">编辑内容</a><i></i></li>
-	        <li><cite></cite><a href="#">发布信息</a><i></i></li>
-	        <li><cite></cite><a href="#">档案列表显示</a><i></i></li>
+	        <li><cite></cite><a href="#">xxxx</a><i></i></li>
+	        <li><cite></cite><a href="#">xxxx</a><i></i></li>
+	        <li><cite></cite><a href="#">xxxx</a><i></i></li>
         </ul>     
     </dd> 
     
     
     <dd><div class="title"><span><img src="${pageContext.request.contextPath}/resources/images/leftico03.png" /></span>教师管理</div>
     <ul class="menuson">
-        <li><cite></cite><a href="#">自定义</a><i></i></li>
-        <li><cite></cite><a href="#">常用资料</a><i></i></li>
-        <li><cite></cite><a href="#">信息列表</a><i></i></li>
-        <li><cite></cite><a href="#">其他</a><i></i></li>
+        <li><cite></cite><a href="#">xxxx</a><i></i></li>
+        <li><cite></cite><a href="#">xxxx</a><i></i></li>
+        <li><cite></cite><a href="#">xxxx</a><i></i></li>
+        <li><cite></cite><a href="#">xxxx</a><i></i></li>
     </ul>    
     </dd>  
     

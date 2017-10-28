@@ -10,26 +10,32 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-		  $(".click").click(function(){
-		  $(".tip").fadeIn(200);
-		  });
-		  
-		  $(".tiptop a").click(function(){
-		  $(".tip").fadeOut(200);
+		  	$("#add").click(function(){
+		  		window.location.href = '${pageContext.request.contextPath}/user/add.shtml';
+		  	});
+		  	$("#update").click(function(){
+		  		window.location.href = '${pageContext.request.contextPath}/user/update.shtml';
+		  	});
+		  	$("#delete").click(function(){
+		  		window.location.href = '${pageContext.request.contextPath}/user/delete.shtml';
+		  	});
 		});
-		
-		  $(".sure").click(function(){
-		  $(".tip").fadeOut(100);
-		});
-		
-		  $(".cancel").click(function(){
-		  $(".tip").fadeOut(100);
-		});
-		
-		});
+		function goPage(pageNo){
+			debugger;
+			var form_ = document.getElementById("searchform");
+			if(form_ == null){
+				alert("Form对象[${param.formId}]为空！");
+			}else{
+				if(form_.action.indexOf('?') != -1){
+					form_.action = form_.action + "&pageNo=" + pageNo + "&pageSize=${page.pageSize}";
+				}else{
+					form_.action = form_.action + "?pageNo=" + pageNo + "&pageSize=${page.pageSize}";
+				}
+				form_.submit();
+			}
+		}
 	</script>
 </head>
-
 
 <body>
 
@@ -37,187 +43,123 @@
     <span>位置：</span>
     <ul class="placeul">
     <li><a href="#">首页</a></li>
-    <li><a href="#">数据表</a></li>
-    <li><a href="#">基本内容</a></li>
+    <li><a href="#">用户管理</a></li>
+    <li><a href="#">用户列表</a></li>
     </ul>
     </div>
     
     <div class="rightinfo">
     
-    <div class="tools">
+    <div style="border: 1px solid #eeeeee;margin-bottom: 18px;padding-top: 10px;padding-bottom: 10px;">
+    	<form id="searchform" action="${pageContext.request.contextPath}/user/list.shtml" method="post">
+    	<table border="0" width="" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="70px" align="center"><b>用户名：</b></td>
+				<td><input id="" name="" class="dfinput" style="width: 167px;"/></td>
+				<td width="160" align="center"><button type="submit" class="sure">查 询</button></td>
+			</tr>	
+    	</table>
+    	</form>
+    </div>
     
+    <div class="tools">
     	<ul class="toolbar">
-        <li class="click"><span><img src="${pageContext.request.contextPath}/resources/images/t01.png" /></span>添加</li>
-        <li class="click"><span><img src="${pageContext.request.contextPath}/resources/images/t02.png" /></span>修改</li>
-        <li><span><img src="${pageContext.request.contextPath}/resources/images/t03.png" /></span>删除</li>
-        <li><span><img src="${pageContext.request.contextPath}/resources/images/t04.png" /></span>统计</li>
+    	<shiro:hasRole name="admin">
+        	<li id="add"><span><img src="${pageContext.request.contextPath}/resources/images/t01.png" /></span>添加</li>
+        	<li id="update"><span><img src="${pageContext.request.contextPath}/resources/images/t02.png" /></span>修改</li>
+        	<li id="delete"><span><img src="${pageContext.request.contextPath}/resources/images/t03.png" /></span>删除</li>
+    	</shiro:hasRole>
         </ul>
-        
-        
         <ul class="toolbar1">
         <li><span><img src="${pageContext.request.contextPath}/resources/images/t05.png" /></span>设置</li>
         </ul>
-    
     </div>
-    
     
     <table class="tablelist">
     	<thead>
     	<tr>
-        <th><input name="" type="checkbox" value="" checked="checked"/></th>
-        <th>编号<i class="sort"><img src="${pageContext.request.contextPath}/resources/images/px.gif" /></i></th>
-        <th>标题</th>
-        <th>用户</th>
-        <th>籍贯</th>
-        <th>发布时间</th>
-        <th>是否审核</th>
+        <th><input name="" type="checkbox" value=""/></th>
+        <th>ID<i class="sort"><img src="${pageContext.request.contextPath}/resources/images/px.gif" /></i></th>
+        <th>用户名</th>
+        <th>邮箱</th>
+        <th>密码</th>
+        <th>创建时间</th>
+        <th>登陆时间</th>
+        <th>是否有效</th>
         <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130908</td>
-        <td>王金平幕僚：马英九声明字字见血 人活着没意思</td>
-        <td>admin</td>
-        <td>江苏南京</td>
-        <td>2013-09-09 15:05</td>
-        <td>已审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink"> 删除</a></td>
-        </tr> 
         
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130907</td>
-        <td>温州19名小学生中毒流鼻血续：周边部分企业关停</td>
-        <td>uimaker</td>
-        <td>山东济南</td>
-        <td>2013-09-08 14:02</td>
-        <td>未审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
+        <c:if test="${not empty page && not empty page.list}">
+			<c:forEach var="v" items="${page.list}">
+				<tr>
+					<td width="50px"><input name="" type="checkbox" value="${v.id}"/></td>
+					<td width="">${v.nickname}</td>
+					<td width="">${v.email}</td>
+					<td width="">${v.email}</td>
+					<td width="">${v.pswd}</td>
+					<td width=""><fmt:formatDate value="${v.createTime}" pattern="yyyy/MM/dd HH:mm:ss" /></td>
+					<td width=""><fmt:formatDate value="${v.lastLoginTime}" pattern="yyyy/MM/dd HH:mm:ss" /></td>
+					<td width="">${v.status eq 1 ? '有效':'无效'}</td>
+					<td width=""><a href="">修改密码</a></td>
+				</tr>
+			</c:forEach>
+		</c:if>
+		<c:if test="${empty page || empty page.list}">
+			<tr>
+				<td align="center" colspan="10">没有数据。</td>
+			</tr>
+		</c:if>
         
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130906</td>
-        <td>社科院:电子商务促进了农村经济结构和社会转型</td>
-        <td>user</td>
-        <td>江苏无锡</td>
-        <td>2013-09-07 13:16</td>
-        <td>未审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
-        
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130905</td>
-        <td>江西&quot;局长违规建豪宅&quot;：局长检讨</td>
-        <td>admin</td>
-        <td>北京市</td>
-        <td>2013-09-06 10:36</td>
-        <td>已审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
-        
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130904</td>
-        <td>中国2020年或迈入高收入国家行列</td>
-        <td>uimaker</td>
-        <td>江苏南京</td>
-        <td>2013-09-05 13:25</td>
-        <td>已审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
-        
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130903</td>
-        <td>深圳地铁车门因乘客拉闸打开 3人被挤入隧道</td>
-        <td>user</td>
-        <td>广东深圳</td>
-        <td>2013-09-04 12:00</td>
-        <td>已审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
-        
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130902</td>
-        <td>33次地表塌陷 村民不敢下地劳作(图)</td>
-        <td>admin</td>
-        <td>湖南长沙</td>
-        <td>2013-09-03 00:05</td>
-        <td>未审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
-        
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130901</td>
-        <td>医患关系：医生在替改革不彻底背黑锅</td>
-        <td>admin</td>
-        <td>江苏南京</td>
-        <td>2013-09-02 15:05</td>
-        <td>未审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>
-        
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>20130900</td>
-        <td>山东章丘公车进饭店景点将自动向监控系统报警</td>
-        <td>uimaker</td>
-        <td>山东滨州</td>
-        <td>2013-09-01 10:26</td>
-        <td>已审核</td>
-        <td><a href="#" class="tablelink">查看</a>     <a href="#" class="tablelink">删除</a></td>
-        </tr>        
         </tbody>
     </table>
     
-   
     <div class="pagin">
-    	<div class="message">共<i class="blue">1256</i>条记录，当前显示第&nbsp;<i class="blue">2&nbsp;</i>页</div>
-        <ul class="paginList">
-        <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
-        <li class="paginItem"><a href="javascript:;">1</a></li>
-        <li class="paginItem current"><a href="javascript:;">2</a></li>
-        <li class="paginItem"><a href="javascript:;">3</a></li>
-        <li class="paginItem"><a href="javascript:;">4</a></li>
-        <li class="paginItem"><a href="javascript:;">5</a></li>
-        <li class="paginItem more"><a href="javascript:;">...</a></li>
-        <li class="paginItem"><a href="javascript:;">10</a></li>
-        <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
-        </ul>
+    	<div class="message">共&nbsp;<i class="blue">${page.total}</i>&nbsp;条记录，当前显示第&nbsp;<i class="blue">${page.pageNum}&nbsp;</i>页</div>
+        
+		<ul class="paginList">
+			<li class="paginItem"><a href="javascript:goPage(1);" aria-label="Previous">首页</a></li>
+			<c:if test="${page.hasPreviousPage}">
+				<li><a href="javascript:goPage(${page.pageNum-1});" aria-label="Previous">上一页</a></li>
+			</c:if>
+			<c:forEach begin="1" end="${page.pages}" var="each">
+				<c:choose>
+					<c:when test="${each == page.pageNum}">
+						<li class="paginItem"><a style="color: black;">${each}</a></li>
+					</c:when>
+					<c:when test="${each >= (page.pageNum-3) && each <= (page.pageNum+3)}">
+						<li class="paginItem"><a href="javascript:goPage(${each});" aria-label="Previous">${each}</a></li>
+					</c:when>
+				</c:choose>
+			</c:forEach>
+			<c:if test="${page.hasNextPage}">
+				<li class="paginItem"><a href="javascript:goPage(${page.pageNum+1});" aria-label="Next">下一页</a></li>
+			</c:if>
+			<li class="paginItem"><a href="javascript:goPage(${page.pages});" aria-label="Previous">尾页</a></li>
+		</ul>
+        
     </div>
-    
     
     <div class="tip">
     	<div class="tiptop"><span>提示信息</span><a></a></div>
-        
-      <div class="tipinfo">
+      	<div class="tipinfo">
         <span><img src="${pageContext.request.contextPath}/resources/images/ticon.png" /></span>
         <div class="tipright">
         <p>是否确认对信息的修改 ？</p>
         <cite>如果是请点击确定按钮 ，否则请点取消。</cite>
         </div>
         </div>
-        
         <div class="tipbtn">
         <input name="" type="button"  class="sure" value="确定" />&nbsp;
         <input name="" type="button"  class="cancel" value="取消" />
         </div>
-    
     </div>
-    
-    
-    
     
     </div>
     
     <script type="text/javascript">
-	$('.tablelist tbody tr:odd').addClass('odd');
+		$('.tablelist tbody tr:odd').addClass('odd');
 	</script>
 
 </body>

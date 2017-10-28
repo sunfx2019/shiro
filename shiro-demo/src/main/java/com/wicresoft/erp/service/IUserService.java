@@ -12,6 +12,9 @@ import com.wicresoft.erp.entity.TUser;
  */
 public interface IUserService {
 
+
+	public List<TUser> fiandAll();
+	
 	public TUser findUserByUserName(String userName);
 
 	public List<String> findUserRoles(String userName);
