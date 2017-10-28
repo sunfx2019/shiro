@@ -7,6 +7,7 @@ import com.wicresoft.erp.web.controller.base.AbctractBaseController;
 
 /**
  * 首页 Controller
+ * 
  * @author sunfx
  */
 @Controller
@@ -23,6 +24,24 @@ public class IndexController extends AbctractBaseController {
 	public String index() {
 		log4j.info(System.currentTimeMillis());
 		return "index";
+	}
+
+	@RequestMapping("/top.shtml")
+	public String top() {
+		log4j.info(System.currentTimeMillis());
+		return "top";
+	}
+
+	@RequestMapping("/left.shtml")
+	public String left() {
+		log4j.info(System.currentTimeMillis());
+		return "left";
+	}
+
+	@RequestMapping("/right.shtml")
+	public String right() {
+		log4j.info(System.currentTimeMillis());
+		return "right";
 	}
 
 }
