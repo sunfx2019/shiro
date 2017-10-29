@@ -64,11 +64,15 @@
     
     <div class="tools">
     	<ul class="toolbar">
-    	<shiro:hasRole name="admin">
-        	<li id="add"><span><img src="${pageContext.request.contextPath}/resources/images/t01.png" /></span>添加</li>
-        	<li id="update"><span><img src="${pageContext.request.contextPath}/resources/images/t02.png" /></span>修改</li>
-        	<li id="delete"><span><img src="${pageContext.request.contextPath}/resources/images/t03.png" /></span>删除</li>
-    	</shiro:hasRole>
+    	<shiro:hasPermission name="/user/add.shtml">
+    		<li id="add"><span><img src="${pageContext.request.contextPath}/resources/images/t01.png" /></span>添加</li>
+    	</shiro:hasPermission>
+    	<shiro:hasPermission name="/user/update.shtml">
+    		<li id="update"><span><img src="${pageContext.request.contextPath}/resources/images/t02.png" /></span>修改</li>
+    	</shiro:hasPermission>
+    	<shiro:hasPermission name="/user/delete.shtml">
+    		<li id="delete"><span><img src="${pageContext.request.contextPath}/resources/images/t03.png" /></span>删除</li>
+    	</shiro:hasPermission>
         </ul>
         <ul class="toolbar1">
         <li><span><img src="${pageContext.request.contextPath}/resources/images/t05.png" /></span>设置</li>

@@ -8,6 +8,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
@@ -19,11 +21,13 @@ import com.wicresoft.erp.core.util.HttpRequestUtil;
  * 
  */
 public class LoginFilter extends AccessControlFilter {
-	final static Class<LoginFilter> CLASS = LoginFilter.class;
 
+	public Log log4j = LogFactory.getLog(getClass());
+	
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
+		log4j.info("调用LoginFilter。。。");
 		HttpServletRequest httpRequest = ((HttpServletRequest) request);
 		HttpServletResponse httpResponse = ((HttpServletResponse) response);
 		if (null != SecurityUtils.getSubject().getPrincipal() || isLoginRequest(request, response)) {

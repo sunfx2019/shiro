@@ -8,6 +8,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -24,10 +26,14 @@ import com.wicresoft.erp.web.security.ShiroFilterFactoryBeanManage;
  *
  */
 public class PermissionFilter extends AccessControlFilter {
+
+	public Log log4j = LogFactory.getLog(getClass());
 	
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
+		
+		log4j.info("调用PermissionFilter。。。");
 
 		// 先判断带参数的权限判断
 		Subject subject = getSubject(request, response);
